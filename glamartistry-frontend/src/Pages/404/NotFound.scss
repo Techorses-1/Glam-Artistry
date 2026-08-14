@@ -1,0 +1,352 @@
+@font-face {
+    font-family: "Content";
+    src: url("../../assets/fonts/content.otf") format("truetype");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Heading";
+    src: url("../../assets/fonts/sectionhead.otf") format("truetype");
+    font-style: normal;
+}
+
+/* ─── VARIABLES ─── */
+$brand: #2b2664;
+$brand-dark: #1a1a4e;
+$brand-light: rgba(43, 38, 100, 0.08);
+$brand-secondary: #2AB453;
+$danger: #e53935;
+$white: #ffffff;
+$border: #e8e8f0;
+$text: #1a1a2e;
+$text-light: #666;
+$muted: #888;
+$bg-light: #f5f7f8;
+$radius: 16px;
+$radius-sm: 10px;
+$transition: all 0.22s ease;
+$shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
+
+/* ─── MAIN WRAPPER ─── */
+.nf {
+    min-height: 77vh;
+    background: linear-gradient(135deg, $white 0%, $bg-light 100%);
+    font-family: "Content", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow-x: hidden;
+
+    @media (max-width: 768px) {
+        padding: 20px 16px;
+    }
+}
+
+.nf__container {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.nf__content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+/* ─── ANIMATED 404 NUMBER ─── */
+.nf__code {
+    font-family: "Heading", sans-serif;
+    font-size: 120px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    @media (max-width: 768px) {
+        font-size: 80px;
+        gap: 6px;
+    }
+
+    @media (max-width: 480px) {
+        font-size: 60px;
+    }
+}
+
+.nf__digit {
+    display: inline-block;
+    color: $brand;
+    text-shadow: 4px 4px 12px rgba(43, 38, 100, 0.15);
+}
+
+.nf__digit--zero {
+    color: $brand-secondary;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ─── TITLE & DESCRIPTION ─── */
+.nf__title {
+    font-family: "Heading", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: $text;
+    margin: 0 0 16px;
+
+    @media (max-width: 768px) {
+        font-size: 24px;
+    }
+
+    @media (max-width: 480px) {
+        font-size: 20px;
+    }
+}
+
+.nf__description {
+    font-size: 16px;
+    color: $text-light;
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto 32px;
+
+    @media (max-width: 768px) {
+        font-size: 14px;
+        padding: 0 16px;
+    }
+}
+
+/* ─── ACTION BUTTONS ─── */
+.nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 48px;
+
+    @media (max-width: 480px) {
+        flex-direction: column;
+        gap: 12px;
+        padding: 0 20px;
+    }
+}
+
+.nf__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 40px;
+    font-family: "Content", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+    text-decoration: none;
+    white-space: nowrap;
+
+    @media (max-width: 480px) {
+        white-space: normal;
+        padding: 10px 20px;
+    }
+
+    svg {
+        font-size: 16px;
+        transition: $transition;
+    }
+
+    &--primary {
+        background: $brand;
+        color: $white;
+        border: none;
+
+        &:hover {
+            background: $brand-dark;
+            transform: translateY(-2px);
+            box-shadow: $shadow-md;
+        }
+    }
+
+    &--secondary {
+        background: $brand-secondary;
+        color: $white;
+        border: none;
+
+        &:hover {
+            background: darken($brand-secondary, 8%);
+            transform: translateY(-2px);
+            box-shadow: $shadow-md;
+        }
+    }
+
+    &--outline {
+        background: transparent;
+        border: 2px solid $brand;
+        color: $brand;
+
+        &:hover {
+            background: $brand;
+            color: $white;
+            transform: translateY(-2px);
+            box-shadow: $shadow-sm;
+        }
+    }
+}
+
+/* ─── HELP SECTION ─── */
+.nf__help {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: $white;
+    padding: 20px 24px;
+    border-radius: $radius;
+    box-shadow: $shadow-sm;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: left;
+    border: 1px solid $border;
+
+    @media (max-width: 560px) {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+    }
+}
+
+.nf__help-icon {
+    width: 48px;
+    height: 48px;
+    background: $brand-light;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg {
+        font-size: 24px;
+        color: $brand;
+    }
+}
+
+.nf__help-text {
+    flex: 1;
+
+    h4 {
+        font-family: "Heading", sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: $text;
+        margin: 0 0 6px;
+    }
+
+    p {
+        font-size: 13px;
+        color: $text-light;
+        margin: 0;
+        line-height: 1.5;
+    }
+}
+
+.nf__link {
+    background: none;
+    border: none;
+    color: $brand;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+    font-family: "Content", sans-serif;
+    font-size: 13px;
+
+    &:hover {
+        color: $brand-secondary;
+        text-decoration: underline;
+    }
+}
+
+/* ─── DECORATIVE ELEMENTS ─── */
+.nf__decor {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(43, 38, 100, 0.03);
+    z-index: 1;
+    pointer-events: none;
+
+    &--1 {
+        width: 300px;
+        height: 300px;
+        top: -100px;
+        left: -100px;
+        background: rgba(43, 38, 100, 0.04);
+    }
+
+    &--2 {
+        width: 200px;
+        height: 200px;
+        bottom: 50px;
+        right: -50px;
+        background: rgba(42, 180, 83, 0.03);
+    }
+
+    &--3 {
+        width: 150px;
+        height: 150px;
+        top: 40%;
+        right: 20%;
+        background: rgba(43, 38, 100, 0.02);
+    }
+}
+
+/* ─── RESPONSIVE ADJUSTMENTS ─── */
+@media (max-width: 768px) {
+    .nf__decor {
+        &--1 {
+            width: 200px;
+            height: 200px;
+            top: -80px;
+            left: -80px;
+        }
+
+        &--2 {
+            width: 150px;
+            height: 150px;
+            bottom: 30px;
+            right: -30px;
+        }
+
+        &--3 {
+            width: 100px;
+            height: 100px;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .nf__decor {
+        display: none;
+    }
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}

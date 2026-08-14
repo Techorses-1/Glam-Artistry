@@ -1,0 +1,331 @@
+@font-face {
+    font-family: "Content";
+    src: url("../../../assets/fonts/content.otf") format("truetype");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Heading";
+    src: url("../../../assets/fonts/sectionhead.otf") format("truetype");
+    font-style: normal;
+}
+
+/* ─── VARIABLES ─── */
+$brand: #2b2664; // deep purple - MAIN COLOR
+$brand-secondary: #2AB453; // green - for accents only
+$danger: #e53935;
+$white: #ffffff;
+$border: #e8e8f0;
+$text: #1a1a2e;
+$text-light: #666;
+$muted: #888;
+$bg-light: #f4f5f9;
+$radius: 12px;
+$transition: all 0.22s ease;
+
+/* ─── WRAPPER ─── */
+.ua {
+    font-family: "Content", sans-serif;
+    color: $text;
+    min-height: 100vh;
+    background: $bg-light;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ─── CONTAINER ─── */
+.ua__container {
+    width: 100%;
+    max-width: 480px;
+    padding: 20px;
+}
+
+/* ─── CARD ─── */
+.ua__card {
+    background: $white;
+    border-radius: $radius;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.02);
+    padding: 32px 28px;
+    transition: $transition;
+}
+
+/* ─── HEADER ─── */
+.ua__header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.ua__title {
+    font-family: "Heading", sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: $brand;
+    /* SOLID PURPLE - NO GRADIENT */
+    margin: 0 0 8px 0;
+}
+
+.ua__subtitle {
+    font-size: 14px;
+    color: $text-light;
+    margin: 0;
+}
+
+/* ─── TOGGLE BUTTONS ─── */
+.ua__toggle {
+    display: flex;
+    gap: 12px;
+    background: $bg-light;
+    padding: 6px;
+    border-radius: $radius;
+    margin-bottom: 28px;
+}
+
+.ua__toggle-btn {
+    flex: 1;
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    color: $muted;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: $transition;
+
+    &--active {
+        background: $white;
+        color: $brand;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    &:hover:not(&--active) {
+        color: $brand;
+    }
+}
+
+/* ─── FORM ─── */
+.ua__form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.ua__form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* ─── INPUTS ─── */
+.ua__input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid $border;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: "Content", sans-serif;
+    color: $text;
+    background: $white;
+    outline: none;
+    transition: $transition;
+    box-sizing: border-box;
+
+    &::placeholder {
+        color: #bbb;
+    }
+
+    &:focus {
+        border-color: $brand;
+        box-shadow: 0 0 0 3px rgba(43, 38, 100, 0.08);
+    }
+
+    &--error {
+        border-color: $danger;
+
+        &:focus {
+            border-color: $danger;
+            box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.08);
+        }
+    }
+}
+
+/* ─── PASSWORD WRAPPER ─── */
+.ua__password-wrapper {
+    position: relative;
+    width: 100%;
+
+    input {
+        width: 100%;
+        padding-right: 45px;
+    }
+}
+
+.ua__eye-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: $muted;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition;
+
+    &:hover {
+        color: $brand;
+    }
+}
+
+/* ─── ERROR MESSAGE ─── */
+.ua__error {
+    font-size: 12px;
+    color: $danger;
+    margin-top: 4px;
+}
+
+/* ─── SUBMIT BUTTON - SOLID PURPLE, NO GRADIENT ─── */
+.ua__submit-btn {
+    width: 100%;
+    padding: 12px 20px;
+    background: $brand;
+    /* SOLID PURPLE - NO GRADIENT */
+    color: $white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    transition: $transition;
+    margin-top: 6px;
+
+    &:hover:not(:disabled) {
+        background: darken($brand, 8%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(43, 38, 100, 0.25);
+    }
+
+    &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+}
+
+/* ─── FOOTER ─── */
+.ua__footer {
+    text-align: center;
+    margin-top: 8px;
+
+    p {
+        font-size: 13px;
+        color: $text-light;
+        margin: 0;
+    }
+}
+
+.ua__link-btn {
+    background: transparent;
+    border: none;
+    color: $brand;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+        color: $brand-secondary;
+        text-decoration: underline;
+    }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+    .ua__container {
+        padding: 16px;
+    }
+
+    .ua__card {
+        padding: 24px 20px;
+    }
+
+    .ua__title {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ua__card {
+        padding: 20px 16px;
+    }
+
+    .ua__title {
+        font-size: 22px;
+    }
+}
+
+/* ─── PASSWORD WRAPPER ─── */
+.ua__password-wrapper {
+    position: relative;
+    width: 100%;
+
+    input {
+        width: 100%;
+        padding-right: 45px;
+    }
+}
+
+.ua__eye-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: $muted;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition;
+
+    &:hover {
+        color: $brand;
+    }
+}
+
+/* ─── FORGOT PASSWORD LINK ─── */
+// ← PUT IT HERE
+.ua__forgot-link {
+    text-align: right;
+    margin-top: -8px;
+    margin-bottom: 4px;
+}
+
+.ua__forgot-btn {
+    background: transparent;
+    border: none;
+    color: $muted;
+    font-size: 13px;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+        color: $brand;
+        text-decoration: underline;
+    }
+}
+
+/* ─── ERROR MESSAGE ─── */
+.ua__error {
+    font-size: 12px;
+    color: $danger;
+    margin-top: 4px;
+}

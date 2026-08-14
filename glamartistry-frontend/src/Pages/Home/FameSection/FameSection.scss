@@ -1,0 +1,301 @@
+@font-face {
+    font-family: "Heading";
+    src: url("../../../assets/fonts/sectionhead.otf") format("truetype");
+    font-style: normal;
+}
+
+.fame-section {
+    width: 100%;
+    overflow: hidden;
+    padding: 60px 0;
+    text-align: center;
+}
+
+/* HEADINGS */
+.fame-title,
+.fame-subtitle {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    padding: 0 20px;
+    font-family: "Heading", sans-serif;
+}
+
+/* DESKTOP GRID — full width */
+.fame-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    width: 85%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.fame-card {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.5s ease;
+    }
+
+    &:hover img {
+        transform: scale(1.05);
+    }
+}
+
+/* MOBILE SLIDER */
+.fame-slider {
+    display: none;
+    width: 90%;
+    margin: 0 auto;
+
+    .swiper {
+        padding-bottom: 36px !important;
+    }
+
+    .swiper-pagination {
+        bottom: 0 !important;
+        position: relative !important;
+        margin-top: 14px;
+    }
+
+    .swiper-pagination-bullet {
+        opacity: 0.3;
+        background: #2b2664;
+    }
+
+    .swiper-pagination-bullet-active {
+        opacity: 1;
+        background: #2b2664 !important;
+    }
+}
+
+/* PLATFORMS BOTTOM SECTION */
+.fame-platforms {
+    padding: 60px 20px 20px;
+}
+
+.fame-subtitle {
+    margin-bottom: 12px;
+}
+
+.fame-description {
+    font-size: clamp(14px, 2vw, 18px);
+    color: #555;
+    margin-bottom: 40px;
+    line-height: 1.5;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* LOGOS MARQUEE OUTER — constrained ~3 logos */
+.fame-logos-outer {
+    max-width: 500px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    padding: 10px 0;
+
+    /* Left fade + shadow effect */
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 80px;
+        height: 100%;
+        // background: linear-gradient(90deg,
+        //         rgba(234, 243, 243, 1) 0%,
+        //         rgba(234, 243, 243, 0.9) 30%,
+        //         rgba(234, 243, 243, 0) 100%);
+        z-index: 2;
+        pointer-events: none;
+        box-shadow:  -05px 0 15px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Right fade + shadow effect */
+    &::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 80px;
+        height: 100%;
+        // background: linear-gradient(90deg,
+        //         rgba(234, 243, 243, 0.451) 0%,
+        //         rgba(234, 243, 243, 0.358) 70%,
+        //         rgba(234, 243, 243, 0.427) 100%);
+        // z-index: 2;
+        z-index: 2;
+        pointer-events: none;
+        box-shadow: 10px 0 15px -5px rgba(255, 255, 255, 0.15);
+    }
+}
+
+/* LOGO BOX - REMOVE ALL SHADOWS */
+.fame-logo-box {
+    width: 100%;
+    height: 100%;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+    /* NO SHADOW on box */
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 12px;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backface-visibility: hidden;
+    background: #fff;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    &:hover {
+        transform: translateY(-5px) scale(1.05);
+        /* box-shadow removed - only transform on hover */
+    }
+
+    @media (max-width: 768px) {
+        border-radius: 16px;
+        padding: 10px;
+    }
+}
+
+/* LOGOS INNER TRACK */
+.fame-logos-inner {
+    display: flex;
+    gap: 24px;
+    width: max-content;
+    animation: fame-logos-scroll 16s linear infinite;
+    will-change: transform;
+}
+
+/* LOGO ITEM */
+.fame-logo-item {
+    flex-shrink: 0;
+    width: 90px;
+    height: 90px;
+    cursor: pointer;
+
+    @media (max-width: 768px) {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+/* LOGO BOX */
+.fame-logo-box {
+    width: 100%;
+    height: 100%;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.00);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 12px;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backface-visibility: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+        border-radius: 16px;
+        padding: 10px;
+    }
+}
+
+/* KEYFRAME — seamless: exactly 1 set = 570px */
+@keyframes fame-logos-scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-570px);
+    }
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+    .fame-grid {
+        display: none;
+    }
+
+    .fame-slider {
+        display: block;
+    }
+
+    .fame-title,
+    .fame-subtitle {
+        font-size: 28px;
+    }
+
+    .fame-subtitle {
+        margin-bottom: 30px;
+    }
+
+    .fame-logos-outer {
+        max-width: 90vw;
+    }
+
+    .fame-platforms {
+        padding: 0px 20px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .fame-title,
+    .fame-subtitle {
+        font-size: 24px;
+    }
+
+    .fame-section {
+        padding: 40px 0;
+    }
+
+    @keyframes fame-logos-scroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-470px);
+        }
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .fame-logos-inner {
+        animation: none;
+    }
+}

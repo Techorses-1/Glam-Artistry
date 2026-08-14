@@ -1,0 +1,493 @@
+@font-face {
+    font-family: "Content";
+    src: url("../../../assets/fonts/content.otf") format("truetype");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Heading";
+    src: url("../../../assets/fonts/sectionhead.otf") format("truetype");
+    font-style: normal;
+}
+
+/* ─── VARIABLES ─── */
+$brand: #2b2664; // deep purple
+$brand-secondary: #2AB453; // green
+$danger: #e53935;
+$white: #ffffff;
+$border: #e8e8f0;
+$text: #1a1a2e;
+$muted: #888;
+$bg: #f4f5f9;
+$radius: 10px;
+$transition: all 0.22s ease;
+
+/* ─── WRAPPER ─── */
+.cm {
+    font-family: "Content", sans-serif;
+    color: $text;
+}
+
+/* ─── HEADER ─── */
+.cm__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 14px;
+
+    h1 {
+        font-family: "Heading", sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: $text;
+        margin: 0;
+    }
+}
+
+.cm__add-btn {
+    background: linear-gradient(135deg, $brand, $brand);
+    color: $white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: $radius;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    transition: $transition;
+    white-space: nowrap;
+
+    &:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(43, 38, 100, 0.25);
+    }
+}
+
+/* ─── TABS ─── */
+.cm__tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid $border;
+    padding-bottom: 0;
+}
+
+.cm__tab-btn {
+    background: transparent;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    color: $muted;
+    cursor: pointer;
+    transition: $transition;
+    position: relative;
+
+    &:hover {
+        color: $brand;
+    }
+
+    &--active {
+        color: $brand;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(135deg, $brand, $brand);
+            border-radius: 2px;
+        }
+    }
+}
+
+/* ─── TABLE WRAPPER ─── */
+.cm__table-wrapper {
+    background: $white;
+    border-radius: 14px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+/* ─── TABLE ─── */
+.cm__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 500px;
+
+    thead {
+        background: #f8f8fc;
+        border-bottom: 1px solid $border;
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-family: "Heading", sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: $muted;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+    }
+
+    tbody tr {
+        border-bottom: 1px solid $border;
+        transition: background 0.15s ease;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background: #fafafe;
+        }
+
+        td {
+            padding: 14px 16px;
+            vertical-align: middle;
+        }
+    }
+}
+
+.cm__name {
+    font-weight: 600;
+    color: $text;
+}
+
+.cm__date {
+    font-size: 13px;
+    color: $muted;
+}
+
+/* ─── STATUS BADGE ─── */
+.cm__status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+
+    &--active {
+        background: rgba(42, 180, 83, 0.12);
+        color: $brand-secondary;
+    }
+
+    &--inactive {
+        background: rgba(136, 136, 136, 0.12);
+        color: $muted;
+    }
+}
+
+/* ─── ACTIONS ─── */
+.cm__actions {
+    display: flex;
+    gap: 8px;
+}
+
+.cm__edit-btn,
+.cm__delete-btn {
+    padding: 6px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: $transition;
+}
+
+.cm__edit-btn {
+    background: rgba(43, 38, 100, 0.08);
+    color: $brand;
+
+    &:hover {
+        background: $brand;
+        color: $white;
+    }
+}
+
+.cm__delete-btn {
+    background: rgba(229, 57, 53, 0.08);
+    color: $danger;
+
+    &:hover {
+        background: $danger;
+        color: $white;
+    }
+}
+
+/* ─── EMPTY / LOADING ─── */
+.cm__empty,
+.cm__loading {
+    padding: 60px 20px;
+    text-align: center;
+    color: $muted;
+    font-size: 14px;
+
+    p {
+        margin-bottom: 16px;
+    }
+}
+
+.cm__empty-btn {
+    background: transparent;
+    border: 1.5px dashed $brand;
+    color: $brand;
+    padding: 9px 20px;
+    border-radius: $radius;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+        background: $brand;
+        color: $white;
+    }
+}
+
+/* ─── MODAL OVERLAY ─── */
+.cm__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* ─── MODAL ─── */
+.cm__modal {
+    background: $white;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    animation: cm-modal-in 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cm-modal-in {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.cm__modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid $border;
+    flex-shrink: 0;
+
+    h2 {
+        font-family: "Heading", sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: $text;
+        margin: 0;
+    }
+}
+
+.cm__close-btn {
+    background: #f0f0f5;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 18px;
+    color: $muted;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition;
+    line-height: 1;
+
+    &:hover {
+        background: $danger;
+        color: $white;
+    }
+}
+
+/* ─── MODAL BODY ─── */
+.cm__modal-body {
+    padding: 22px 24px;
+    overflow-y: auto;
+    flex: 1;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $border;
+        border-radius: 2px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+/* ─── FORM ELEMENTS ─── */
+.cm__form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+
+    label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #444;
+        font-family: "Content", sans-serif;
+    }
+
+    input,
+    select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px 14px;
+        border: 1.5px solid $border;
+        border-radius: $radius;
+        font-size: 14px;
+        font-family: "Content", sans-serif;
+        color: $text;
+        background: $white;
+        outline: none;
+        transition: $transition;
+
+        &::placeholder {
+            color: #bbb;
+        }
+
+        &:focus {
+            border-color: $brand;
+            box-shadow: 0 0 0 3px rgba(43, 38, 100, 0.08);
+        }
+    }
+
+    select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+    }
+}
+
+/* ─── MODAL ACTIONS ─── */
+.cm__modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 4px;
+}
+
+.cm__cancel-btn {
+    padding: 10px 20px;
+    border: 1.5px solid $border;
+    background: transparent;
+    border-radius: $radius;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    color: $muted;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+        border-color: $muted;
+        color: $text;
+    }
+}
+
+.cm__submit-btn {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, $brand, $brand);
+    color: $white;
+    border: none;
+    border-radius: $radius;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    transition: $transition;
+    min-width: 100px;
+
+    &:hover:not(:disabled) {
+        opacity: 0.88;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(43, 38, 100, 0.25);
+    }
+
+    &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+    .cm__header h1 {
+        font-size: 20px;
+    }
+
+    .cm__table-wrapper {
+        overflow-x: auto;
+    }
+
+    .cm__modal {
+        max-width: 100%;
+        max-height: 95vh;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .cm__overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .cm__actions {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .cm__edit-btn,
+    .cm__delete-btn {
+        width: 100%;
+        text-align: center;
+    }
+}

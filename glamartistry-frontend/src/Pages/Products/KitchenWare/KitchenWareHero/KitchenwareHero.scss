@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap');
+
+.kitchenware-hero-section {
+  width: 100%;
+  height: 83vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* BG IMAGE — static, no animation */
+.kitchenware-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
+/* OVERLAY - static */
+.kitchenware-hero-overlay {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* TEXT - only this animates */
+.kitchenware-hero-title {
+  color: #ffffff;
+  font-size: 90px;
+  font-weight: 600;
+  line-height: 1.1;
+  font-family: "Fraunces", serif;
+//   text-transform: uppercase; 
+  letter-spacing: 2px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .kitchenware-hero-section {
+    height: 50vh;
+  }
+
+  .kitchenware-hero-title {
+    font-size: 48px;
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .kitchenware-hero-section {
+    height: 40vh;
+  }
+
+  .kitchenware-hero-title {
+    font-size: 36px;
+  }
+}

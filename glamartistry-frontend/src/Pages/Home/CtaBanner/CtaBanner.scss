@@ -1,0 +1,102 @@
+// @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+// @font-face {
+//   font-family: "Cursew";
+//   src: url("../../../assets/fonts/cursew.ttf") format("truetype");
+// }
+
+// .cta-banner {
+//   width: 100%;
+//   height: 40vh;
+//   position: relative;
+//   overflow: hidden;
+//   background: url("https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=1600") no-repeat center center/cover;
+//   background-attachment: fixed;
+//   /* optional: gives parallax feel, remove if unwanted */
+// }
+
+// /* DARK OVERLAY for readability - NO ANIMATION */
+// .cta-banner-overlay {
+//   width: 100%;
+//   height: 100%;
+//   background: rgba(0, 0, 0, 0.25);
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   text-align: center;
+// }
+
+// /* TEXT - ONLY THIS ANIMATES */
+// .cta-banner-text {
+//   color: #f4e96b;
+//   font-size: 64px;
+//   font-weight: 400;
+//   font-family: "Cursew";
+//   letter-spacing: 1.5px;
+//   margin: 0;
+//   padding: 0;
+
+//   @media (max-width: 992px) {
+//     font-size: 28px;
+//     padding: 0 10px;
+//   }
+// }
+
+// /* 📱 RESPONSIVE */
+// @media (max-width: 992px) {
+//   .cta-banner {
+//     height: 30vh;
+//   }
+// }
+
+
+
+
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+@font-face {
+  font-family: "Cursew";
+  src: url("../../../assets/fonts/cursew.ttf") format("truetype");
+}
+
+.cta-banner {
+  width: 100%;
+  height: 40vh;
+  position: relative;
+  overflow: hidden;
+  background: url("https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=1600")
+    no-repeat center center/cover;
+  /* NO background-attachment: fixed - image stays within section only */
+}
+
+.cta-banner-overlay {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.cta-banner-text {
+  color: #f4e96b;
+  font-size: 64px;
+  font-weight: 400;
+  font-family: "Cursew";
+  letter-spacing: 1.5px;
+}
+
+@media (max-width: 992px) {
+  .cta-banner {
+    height: 30vh;
+  }
+
+  .cta-banner-text {
+    font-size: 28px;
+    padding: 0 10px;
+  }
+}

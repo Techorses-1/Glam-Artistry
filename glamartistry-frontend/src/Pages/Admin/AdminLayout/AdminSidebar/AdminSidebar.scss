@@ -1,0 +1,293 @@
+@font-face {
+    font-family: "Content";
+    src: url("../../../assets/fonts/content.otf") format("truetype");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Heading";
+    src: url("../../../assets/fonts/sectionhead.otf") format("truetype");
+    font-style: normal;
+}
+
+/* ─── VARIABLES ─── */
+$sidebar-width: 260px;
+$sidebar-collapsed: 72px;
+$brand: #2b2664;
+$brand-dark: #1a1a4e;
+$brand-secondary: #2AB453;
+$text-muted: rgba(255, 255, 255, 0.55);
+$text-light: rgba(255, 255, 255, 0.9);
+$active-bg: rgba(255, 255, 255, 0.12);
+$hover-bg: rgba(255, 255, 255, 0.08);
+$danger: #e53935;
+$transition: all 0.3s ease;
+
+/* ─── LAYOUT ─── */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #f4f5f9;
+    position: relative;
+}
+
+/* ─── MOBILE HAMBURGER (TOP LEFT) ─── */
+.admin-mobile-hamburger {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1001;
+    background: $brand;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    font-size: 22px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: $transition;
+
+    &:hover {
+        background: $brand-dark;
+    }
+}
+
+/* ─── SIDEBAR ─── */
+.admin-sidebar {
+    width: $sidebar-width;
+    height: 100vh;
+    background: $brand-dark;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transition: $transition;
+    font-family: "Content", sans-serif;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+
+    /* DESKTOP COLLAPSED STATE */
+    &.desktop-collapsed {
+        width: $sidebar-collapsed;
+    }
+
+    /* MOBILE STATES */
+    &.mobile-closed {
+        transform: translateX(-100%);
+    }
+
+    &.mobile-open {
+        transform: translateX(0);
+        width: $sidebar-width;
+    }
+
+    &::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+    }
+}
+
+/* ─── HEADER ─── */
+.admin-sidebar-header {
+    padding: 0 16px;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+}
+
+.admin-logo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.admin-logo-text {
+    font-family: "Heading", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.admin-toggle-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: $text-light;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: $transition;
+    flex-shrink: 0;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+    }
+}
+
+/* ─── NAV ─── */
+.admin-nav {
+    flex: 1;
+    padding: 20px 12px;
+}
+
+.admin-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    li a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: $text-light;
+        font-size: 14px;
+        font-weight: 500;
+        transition: $transition;
+        white-space: nowrap;
+
+        &:hover {
+            background: $hover-bg;
+            color: #fff;
+        }
+
+        &.active {
+            background: $active-bg;
+            color: #fff;
+            font-weight: 600;
+            border-left: 3px solid $brand-secondary;
+        }
+    }
+}
+
+.admin-menu-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+}
+
+.admin-menu-title {
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* ─── FOOTER ─── */
+.admin-sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+
+    p {
+        font-size: 10px;
+        color: $text-muted;
+        margin: 0 0 2px 0;
+    }
+
+    span {
+        font-size: 13px;
+        font-weight: 700;
+        color: $text-light;
+        display: block;
+        margin-bottom: 12px;
+    }
+}
+
+.admin-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(229, 57, 53, 0.12);
+    border: 1px solid rgba(229, 57, 53, 0.25);
+    border-radius: 10px;
+    color: #ff8080;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+
+    svg {
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    &:hover {
+        background: rgba(229, 57, 53, 0.22);
+        color: #ffa0a0;
+    }
+}
+
+/* ─── OVERLAY (mobile only) ─── */
+.admin-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    cursor: pointer;
+}
+
+/* ─── MAIN CONTENT ─── */
+.admin-content {
+    flex: 1;
+    margin-left: $sidebar-width;
+    min-height: 100vh;
+    transition: $transition;
+    background: #f4f5f9;
+    padding: 20px;
+    overflow-x: auto;
+
+    /* Desktop expanded state (sidebar collapsed) */
+    &.expanded {
+        margin-left: $sidebar-collapsed;
+    }
+
+    /* Mobile state */
+    &.mobile {
+        margin-left: 0;
+        padding: 70px 16px 20px 16px;
+    }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+    .admin-content {
+        margin-left: 0;
+    }
+}

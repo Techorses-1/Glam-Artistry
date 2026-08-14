@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap');
+
+.drinkware-hero-section {
+  width: 100%;
+  height: 83vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* BG IMAGE — static, no animation */
+.drinkware-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
+/* OVERLAY - static */
+.drinkware-hero-overlay {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* TEXT - only this animates */
+.drinkware-hero-title {
+  color: #ffffff;
+  font-size: 90px;
+  font-weight: 600;
+  line-height: 1.1;
+  font-family: "Fraunces", serif;
+//   text-transform: uppercase; 
+  letter-spacing: 2px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .drinkware-hero-section {
+    height: 50vh;
+  }
+
+  .drinkware-hero-title {
+    font-size: 48px;
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .drinkware-hero-section {
+    height: 40vh;
+  }
+
+  .drinkware-hero-title {
+    font-size: 36px;
+  }
+}

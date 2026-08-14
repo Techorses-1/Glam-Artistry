@@ -1,0 +1,980 @@
+@font-face {
+    font-family: "Content";
+    src: url("../../../assets/fonts/content.otf") format("truetype");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Heading";
+    src: url("../../../assets/fonts/sectionhead.otf") format("truetype");
+    font-style: normal;
+}
+
+/* ─── VARIABLES ─── */
+$brand: #2b2664;
+$brand-dark: #1a1a4e;
+$brand-secondary:  #1a1a4e ;
+$brand-teal: #0c6c7a;
+$danger: #e53935;
+$white: #fff;
+$border: #e8e8f0;
+$text: #1a1a2e;
+$muted: #888;
+$bg: #f4f5f9;
+$radius: 10px;
+$transition: all 0.22s ease;
+
+/* ─── WRAPPER ─── */
+.pm {
+    font-family: "Content", sans-serif;
+    color: $text;
+}
+
+/* ─── HEADER ─── */
+.pm__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 14px;
+
+    h1 {
+        font-family: "Heading", sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: $text;
+        margin: 0;
+    }
+}
+
+.pm__add-btn {
+    background: linear-gradient(135deg, $brand, $brand);
+    color: $white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: $radius;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    transition: $transition;
+    white-space: nowrap;
+
+    &:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(43, 38, 100, 0.25);
+    }
+}
+
+/* ─── SEARCH ─── */
+.pm__search-bar {
+    margin-bottom: 20px;
+}
+
+.pm__search-input {
+    width: 100%;
+    max-width: 380px;
+    box-sizing: border-box;
+    padding: 10px 16px;
+    border: 1.5px solid $border;
+    border-radius: $radius;
+    font-size: 14px;
+    font-family: "Content", sans-serif;
+    color: $text;
+    background: $white;
+    outline: none;
+    transition: $transition;
+
+    &:focus {
+        border-color: $brand;
+        box-shadow: 0 0 0 3px rgba(43, 38, 100, 0.08);
+    }
+
+    &::placeholder {
+        color: #bbb;
+    }
+}
+
+/* ─── TABLE WRAPPER ─── */
+.pm__table-wrapper {
+    background: $white;
+    border-radius: 14px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+/* ─── TABLE ─── */
+.pm__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 700px;
+
+    thead {
+        background: #f8f8fc;
+        border-bottom: 1px solid $border;
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-family: "Heading", sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: $muted;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+    }
+
+    tbody tr {
+        border-bottom: 1px solid $border;
+        transition: background 0.15s ease;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background: #fafafe;
+        }
+
+        td {
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+    }
+}
+
+.pm__thumb {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid $border;
+    display: block;
+}
+
+.pm__id {
+    font-size: 12px;
+    color: $muted;
+    font-family: monospace;
+}
+
+.pm__name {
+    font-weight: 600;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pm__price {
+    font-weight: 700;
+    color: $brand;
+}
+
+.pm__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    padding: 3px 10px;
+    background: rgba(43, 38, 100, 0.08);
+    color: $brand;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ─── TABLE ACTION BUTTONS ─── */
+.pm__actions {
+    display: flex;
+    gap: 8px;
+}
+
+.pm__edit-btn,
+.pm__delete-btn {
+    padding: 6px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: $transition;
+}
+
+.pm__edit-btn {
+    background: rgba(43, 38, 100, 0.08);
+    color: $brand;
+
+    &:hover {
+        background: $brand;
+        color: $white;
+    }
+}
+
+.pm__delete-btn {
+    background: rgba(229, 57, 53, 0.08);
+    color: $danger;
+
+    &:hover {
+        background: $danger;
+        color: $white;
+    }
+}
+
+/* ─── PAGINATION ─── */
+.pm__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border-top: 1px solid $border;
+}
+
+.pm__page-btn {
+    padding: 8px 18px;
+    border: 1.5px solid $border;
+    border-radius: $radius;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    background: $white;
+    color: $brand;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover:not(:disabled) {
+        background: $brand;
+        color: $white;
+        border-color: $brand;
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+}
+
+.pm__page-info {
+    font-size: 13px;
+    color: $muted;
+}
+
+/* ─── EMPTY / LOADING ─── */
+.pm__empty,
+.pm__loading {
+    padding: 60px 20px;
+    text-align: center;
+    color: $muted;
+    font-size: 14px;
+
+    p {
+        margin-bottom: 16px;
+    }
+}
+
+.pm__empty-btn {
+    background: transparent;
+    border: 1.5px dashed $brand;
+    color: $brand;
+    padding: 9px 20px;
+    border-radius: $radius;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+        background: $brand;
+        color: $white;
+    }
+}
+
+/* ─── MODAL OVERLAY ─── */
+.pm__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* ─── MODAL ─── */
+.pm__modal {
+    background: $white;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 620px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    animation: pm-modal-in 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    &--sm {
+        max-width: 480px;
+    }
+}
+
+@keyframes pm-modal-in {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.pm__modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid $border;
+    flex-shrink: 0;
+
+    h2 {
+        font-family: "Heading", sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: $text;
+        margin: 0;
+    }
+}
+
+.pm__close-btn {
+    background: #f0f0f5;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 18px;
+    color: $muted;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition;
+    line-height: 1;
+
+    &:hover {
+        background: $danger;
+        color: $white;
+    }
+}
+
+/* ─── MODAL BODY (SCROLLABLE) ─── */
+.pm__modal-body {
+    padding: 22px 24px;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $border;
+        border-radius: 2px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+}
+
+/* ─── FORM ELEMENTS ─── */
+.pm__form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+
+    label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #444;
+        font-family: "Content", sans-serif;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px 14px;
+        border: 1.5px solid $border;
+        border-radius: $radius;
+        font-size: 14px;
+        font-family: "Content", sans-serif;
+        color: $text;
+        background: #fafafa;
+        outline: none;
+        transition: $transition;
+        resize: vertical;
+        appearance: none;
+
+        &::placeholder {
+            color: #bbb;
+        }
+
+        &:focus {
+            border-color: $brand;
+            background: $white;
+            box-shadow: 0 0 0 3px rgba(43, 38, 100, 0.08);
+        }
+    }
+}
+
+.pm__form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ─── FILE INPUT ─── */
+.pm__file-input {
+    padding: 8px 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    font-size: 13px !important;
+}
+
+/* ─── CURRENT THUMBNAIL ─── */
+.pm__current-thumb {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    padding: 10px;
+    background: #f8f8fc;
+    border-radius: 8px;
+    border: 1px solid $border;
+
+    img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    span {
+        font-size: 12px;
+        color: $muted;
+    }
+}
+
+/* ─── SPECIFICATIONS ─── */
+.pm__specs {
+    background: #f8f8fc;
+    border: 1px solid $border;
+    border-radius: $radius;
+    padding: 16px;
+}
+
+.pm__specs-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #444;
+        font-family: "Content", sans-serif;
+    }
+}
+
+.pm__spec-add-btn {
+    background: $brand;
+    color: $white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+        opacity: 0.85;
+    }
+}
+
+.pm__specs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pm__spec-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+
+    input {
+        padding: 9px 12px;
+        border: 1.5px solid $border;
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: "Content", sans-serif;
+        outline: none;
+        background: $white;
+        transition: $transition;
+
+        &:focus {
+            border-color: $brand;
+        }
+    }
+
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr 1fr auto;
+    }
+}
+
+.pm__spec-remove-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    border: none;
+    background: rgba(229, 57, 53, 0.1);
+    color: $danger;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition;
+    flex-shrink: 0;
+
+    &:hover {
+        background: $danger;
+        color: $white;
+    }
+}
+
+.pm__no-data {
+    font-size: 13px;
+    color: $muted;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* ─── VARIATIONS ─── */
+.pm__variations {
+    background: #f8f8fc;
+    border: 1px solid $border;
+    border-radius: $radius;
+    padding: 16px;
+}
+
+.pm__variations-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #444;
+        font-family: "Content", sans-serif;
+    }
+}
+
+.pm__var-add-btn {
+    background: $brand-teal;
+    color: $white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+        opacity: 0.85;
+    }
+}
+
+.pm__variations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pm__variation-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: $white;
+    border: 1px solid $border;
+    border-radius: 8px;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.pm__variation-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+
+    strong {
+        font-size: 14px;
+        color: $text;
+    }
+
+    span {
+        font-size: 13px;
+        color: $muted;
+    }
+}
+
+.pm__img-count {
+    background: rgba(12, 108, 122, 0.1);
+    color: $brand-teal;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pm__variation-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.pm__var-edit-btn,
+.pm__var-delete-btn {
+    padding: 5px 12px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: $transition;
+}
+
+.pm__var-edit-btn {
+    background: rgba(43, 38, 100, 0.08);
+    color: $brand;
+
+    &:hover {
+        background: $brand;
+        color: $white;
+    }
+}
+
+.pm__var-delete-btn {
+    background: rgba(229, 57, 53, 0.08);
+    color: $danger;
+
+    &:hover {
+        background: $danger;
+        color: $white;
+    }
+}
+
+/* ─── EXISTING IMAGES GRID ─── */
+.pm__images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.pm__image-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid $border;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+}
+
+.pm__remove-img-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.6);
+    color: $white;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition;
+    line-height: 1;
+
+    &:hover {
+        background: $danger;
+    }
+}
+
+/* ─── MODAL ACTIONS ─── */
+.pm__modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 4px;
+    flex-shrink: 0;
+}
+
+.pm__cancel-btn {
+    padding: 10px 20px;
+    border: 1.5px solid $border;
+    background: transparent;
+    border-radius: $radius;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    color: $muted;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+        border-color: $muted;
+        color: $text;
+    }
+}
+
+.pm__submit-btn {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, $brand, $brand);
+    color: $white;
+    border: none;
+    border-radius: $radius;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    transition: $transition;
+    min-width: 100px;
+
+    &:hover:not(:disabled) {
+        opacity: 0.88;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(43, 38, 100, 0.25);
+    }
+
+    &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+    .pm__header h1 {
+        font-size: 20px;
+    }
+
+    .pm__table-wrapper {
+        overflow-x: auto;
+    }
+
+    .pm__table {
+
+        th:nth-child(1),
+        td:nth-child(1),
+        th:nth-child(6),
+        td:nth-child(6) {
+            display: none;
+        }
+    }
+
+    .pm__modal {
+        max-width: 100%;
+        max-height: 95vh;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .pm__overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
+}
+
+/* ─── VARIATION TYPE RADIO BUTTONS ─── */
+.pm__variation-type {
+    background: #f8f8fc;
+    border: 1px solid $border;
+    border-radius: $radius;
+    padding: 16px;
+    margin-bottom: 10px;
+}
+
+.pm__variation-type-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    font-family: "Content", sans-serif;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.pm__radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pm__radio-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: "Content", sans-serif;
+    color: $text;
+
+    input {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        accent-color: $brand;
+    }
+
+    &:hover {
+        color: $brand;
+    }
+}
+
+/* ─── CONVERT SECTION ─── */
+.pm__convert-section {
+    background: rgba(42, 180, 83, 0.08);
+    border: 1px solid rgba(42, 180, 83, 0.3);
+    border-radius: $radius;
+    padding: 16px;
+    margin-bottom: 10px;
+}
+
+.pm__convert-btn {
+    background: $brand-secondary;
+    color: $white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "Content", sans-serif;
+    cursor: pointer;
+    transition: $transition;
+    width: 100%;
+
+    &:hover {
+        background: darken($brand-secondary, 8%);
+        transform: translateY(-1px);
+    }
+}
+
+.pm__convert-note {
+    font-size: 12px;
+    color: $muted;
+    margin-top: 12px;
+    text-align: center;
+}
+
+/* ─── SIMPLE PRODUCT SECTION ─── */
+.pm__simple-product {
+    background: #f8f8fc;
+    border: 1px solid $border;
+    border-radius: $radius;
+    padding: 16px;
+    margin-bottom: 10px;
+}
+
+.pm__simple-header {
+    margin-bottom: 16px;
+
+    label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #444;
+        font-family: "Content", sans-serif;
+    }
+}
+
+.pm__selected-images {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(43, 38, 100, 0.08);
+    border-radius: 8px;
+
+    p {
+        font-size: 12px;
+        color: $brand;
+        margin: 0;
+    }
+}
+
+/* ─── CONVERT WARNING MODAL ─── */
+.pm__convert-warning {
+    text-align: center;
+
+    p {
+        font-size: 14px;
+        color: $text;
+        margin: 10px 0;
+    }
+
+    ul {
+        text-align: left;
+        margin: 15px 0;
+        padding-left: 20px;
+
+        li {
+            font-size: 13px;
+            color: $muted;
+            margin: 8px 0;
+        }
+    }
+}
