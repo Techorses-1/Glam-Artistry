@@ -80,12 +80,12 @@ const NotFound = () => {
 
                     {/* Title & Description */}
                     <motion.h1 className="nf__title" variants={itemVariants}>
-                        Oops! Page Not Found
+                        Oops! Page Not Found!
                     </motion.h1>
 
                     <motion.p className="nf__description" variants={itemVariants}>
                         The page you are looking for might have been removed,
-                        had its name changed, or is temporarily unavailable.
+                        had its name changed, or is temporarily unavailable!.
                     </motion.p>
 
                     {/* Action Buttons */}
