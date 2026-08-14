@@ -66,7 +66,7 @@ app.use("/reviews", reviewRoutes);
 
 // ================= TEST ROUTE =================
 app.get("/", (req, res) => {
-    res.send("GLAM ARTISTRY Backend Running...");
+    res.send("GLAM ARTISTRY Backend Updated Running...");
 });
 
 // ================= 404 HANDLER =================
