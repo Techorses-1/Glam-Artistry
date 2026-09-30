@@ -99,7 +99,7 @@ const Navbar = () => {
         <>
             {/* TOP BAR */}
             <div className="navbar-topbar">
-                <p>" UP TO 50% OFF - LIMITED TIME ONLY! HURRY UP! "</p>
+                <p>" UP TO 50% OFF - LIMITED TIME ONLY! HURRY UP. "</p>
             </div>
 
             {/* MAIN NAV */}
