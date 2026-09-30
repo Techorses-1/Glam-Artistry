@@ -15,7 +15,7 @@
 
 .bs-section {
     padding: 60px 20px;
-    
+
     font-family: "Content", sans-serif;
     overflow-x: hidden;
     width: 85%;
@@ -255,4 +255,49 @@
 .swiper-button-next,
 .swiper-button-prev {
     display: none !important;
+}
+
+
+/* WISHLIST BUTTON */
+.bs-card__image-wrap {
+    position: relative;
+}
+
+.bs-card__wishlist {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    z-index: 2;
+
+    svg {
+        font-size: 18px;
+        color: #333;
+        transition: all 0.2s ease;
+    }
+
+    &:hover svg {
+        color: #ff4444;
+        transform: scale(1.1);
+    }
+
+    &.active svg {
+        color: #ff4444;
+        fill: #ff4444;
+    }
+
+    &.active:hover svg {
+        color: #e53935;
+        fill: #e53935;
+        transform: scale(1.1);
+    }
 }

@@ -19,8 +19,7 @@
   font-size: 13px;
   font-family: "Content", sans-serif;
   transition: background 0.3s ease;
- 
- 
+
   &:hover {
     background: #2b2664;
   }
@@ -28,11 +27,9 @@
   @media (max-width: 768px) {
     font-size: 11.5px;
   }
+}
 
-  
-} 
-
-.navbar-topbar p{
+.navbar-topbar p {
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -261,12 +258,13 @@
 /* ─── DESKTOP ICONS ─── */
 .navbar-icons {
   display: flex;
-  gap: 18px;
+  gap: 24px;
   font-size: 20px;
   color: #333;
   cursor: pointer;
+  align-items: center;
 
-  svg {
+  >svg {
     transition: all 0.3s ease;
     cursor: pointer;
 
@@ -275,6 +273,66 @@
       transform: translateY(-3px) scale(1.1);
     }
   }
+}
+
+/* ─── ICON WRAP + BADGE ─── */
+.navbar-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+
+  svg {
+    width: 22px;
+    height: 22px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  &:hover svg {
+    color: #2b2664;
+    transform: translateY(-3px) scale(1.1);
+  }
+}
+
+/* Filled heart when wishlist has items */
+.navbar-heart.active {
+  color: #ff4444;
+  fill: #ff4444;
+
+  &:hover {
+    color: #e53935;
+    fill: #e53935;
+  }
+}
+
+/* Count badge, sits on the top-right corner of the icon */
+.navbar-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(45%, -45%);
+  box-sizing: border-box;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: #262664;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  font-family: "Content-dark", sans-serif;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 2px 5px rgba(38, 38, 100, 0.35);
+  border: 1.5px solid #fff;
+  pointer-events: none;
+  z-index: 2;
 }
 
 /* ─── HAMBURGER — uiverse style ─── */
@@ -321,7 +379,6 @@
     }
   }
 
-  /* Default (closed) — reverse animations */
   span:nth-child(1) {
     animation: ease 0.8s menu-icon-top-2 forwards;
   }
@@ -334,7 +391,6 @@
     animation: ease 0.8s menu-icon-bottom-2 forwards;
   }
 
-  /* Open state — forward animations */
   &.is-open {
     span:nth-child(1) {
       animation: ease 0.8s menu-icon-top forwards;
@@ -350,7 +406,6 @@
     }
   }
 
-  /* Hover (only when NOT open) */
   &:not(.is-open):hover {
     span:nth-child(1) {
       animation: ease 0.8s menu-icon-top forwards;
@@ -571,16 +626,6 @@
     margin-bottom: 12px;
     position: relative;
     display: inline-block;
-
-    // &::after {
-    //   content: "";
-    //   position: absolute;
-    //   bottom: -3px;
-    //   left: 0;
-    //   width: 30px;
-    //   height: 2px;
-    //   background: #262664;
-    // }
   }
 
   .mobile-submenu-links {
@@ -613,20 +658,25 @@
 /* MOBILE ICONS */
 .navbar-mobile-icons {
   display: flex;
-  gap: 20px;
+  gap: 24px;
   font-size: 22px;
   color: #3b2e7e;
   cursor: pointer;
   padding-top: 20px;
   border-top: 1px solid #eee;
+  align-items: center;
 
-  svg {
+  >svg {
     transition: all 0.3s ease;
 
     &:hover {
       color: #262664;
       transform: translateY(-3px) scale(1.1);
     }
+  }
+
+  .navbar-icon-wrap {
+    position: relative;
   }
 }
 

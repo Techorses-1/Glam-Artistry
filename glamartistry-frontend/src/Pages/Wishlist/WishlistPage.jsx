@@ -2,16 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FiTrash2, FiHeart } from "react-icons/fi";
+import { FiHeart } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 
 import "./WishlistPage.scss";
+import CartSidebar from "../Cart/CartSidebar";
 
 const WishlistPage = () => {
     const [wishlistItems, setWishlistItems] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [hoveredProduct, setHoveredProduct] = useState(null);
     const [removingItem, setRemovingItem] = useState(null);
+    const [addingToCartItem, setAddingToCartItem] = useState(null);
+    const [showCartSidebar, setShowCartSidebar] = useState(false);
     const navigate = useNavigate();
 
     // Fetch wishlist
@@ -66,11 +68,38 @@ const WishlistPage = () => {
         }
     };
 
-    // Move to cart (placeholder - will implement later)
-    const handleMoveToCart = (item, e) => {
+    // Move to cart (real API call — item stays in wishlist)
+    const handleMoveToCart = async (item, e) => {
         e.stopPropagation();
-        toast.success(`Added ${item.productName} (${item.designName}) to cart`);
-        // TODO: Implement add to cart functionality
+        setAddingToCartItem(`${item.productId}-${item.variationId}`);
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/cart/add`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                    productId: item.productId,
+                    variationId: item.variationId,
+                    quantity: 1,
+                    designName: item.designName,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                toast.success(`${item.productName} (${item.designName}) added to cart`);
+                setShowCartSidebar(true);
+                window.dispatchEvent(new Event("cartUpdated"));
+            } else {
+                toast.error(data.message || "Failed to add to cart");
+            }
+        } catch (error) {
+            toast.error("Failed to add to cart");
+        } finally {
+            setAddingToCartItem(null);
+        }
     };
 
     // Clear all wishlist
@@ -117,14 +146,6 @@ const WishlistPage = () => {
         return discount;
     };
 
-    // Get display image (thumbnail or hover image)
-    const getDisplayImage = (item, isHovered) => {
-        if (isHovered && item.variationImage) {
-            return item.variationImage;
-        }
-        return item.thumbnail;
-    };
-
     // Capitalize first letter
     const capitalizeFirst = (str) => {
         if (!str) return "";
@@ -147,16 +168,12 @@ const WishlistPage = () => {
 
     // Product Card Component
     const ProductCard = ({ item }) => {
-        const isHovered = hoveredProduct === item.productId;
         const discountPercent = getDiscountPercentage(item.sellingPrice, item.originalPrice);
         const isRemoving = removingItem === `${item.productId}-${item.variationId}`;
+        const isAddingToCart = addingToCartItem === `${item.productId}-${item.variationId}`;
 
         return (
-            <div
-                className="wp__product-card"
-                onMouseEnter={() => setHoveredProduct(item.productId)}
-                onMouseLeave={() => setHoveredProduct(null)}
-            >
+            <div className="wp__product-card">
                 <div className="wp__product-image-wrap">
                     <button
                         className="wp__remove-btn"
@@ -167,7 +184,7 @@ const WishlistPage = () => {
                     </button>
 
                     <img
-                        src={getDisplayImage(item, isHovered)}
+                        src={item.thumbnail}
                         alt={item.productName}
                         className="wp__product-img"
                         onError={(e) => {
@@ -198,8 +215,16 @@ const WishlistPage = () => {
                     <button
                         className="wp__move-to-cart"
                         onClick={(e) => handleMoveToCart(item, e)}
+                        disabled={isAddingToCart}
                     >
-                        Move to Cart
+                        {isAddingToCart ? (
+                            <>
+                                <span className="wp__btn-spinner"></span>
+                                Adding...
+                            </>
+                        ) : (
+                            "Move to Cart"
+                        )}
                     </button>
                 </div>
             </div>
@@ -285,7 +310,6 @@ const WishlistPage = () => {
                 {/* Products Grid */}
                 <div className="wp__content">
                     {isMobile ? (
-                        // Mobile: Products first, then summary below
                         <>
                             <div className="wp__products-grid">
                                 {items.map((item) => (
@@ -297,7 +321,6 @@ const WishlistPage = () => {
                             </div>
                         </>
                     ) : (
-                        // Desktop/Tablet: Summary integrated in grid
                         <>
                             {items.length <= 3 ? (
                                 <div className="wp__products-grid">
@@ -325,6 +348,12 @@ const WishlistPage = () => {
                     )}
                 </div>
             </div>
+
+            {/* Cart Sidebar */}
+            <CartSidebar
+                isOpen={showCartSidebar}
+                onClose={() => setShowCartSidebar(false)}
+            />
         </div>
     );
 };

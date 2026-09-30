@@ -12,6 +12,8 @@ const Navbar = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showCartSidebar, setShowCartSidebar] = useState(false);
+    const [cartCount, setCartCount] = useState(0);
+    const [wishlistCount, setWishlistCount] = useState(0);
     const menuRef = useRef(null);
     const hamburgerRef = useRef(null);
     const dropdownRef = useRef(null);
@@ -25,13 +27,72 @@ const Navbar = () => {
                 credentials: "include",
             });
             setIsLoggedIn(response.ok);
-        } catch {
+            console.log("[Navbar] checkAuth status:", response.status, "loggedIn:", response.ok);
+            return response.ok;
+        } catch (err) {
+            console.error("[Navbar] checkAuth error:", err);
             setIsLoggedIn(false);
+            return false;
         }
     };
 
+    // Fetch cart + wishlist counts
+    const fetchCounts = async () => {
+        try {
+            const [cartRes, wishlistRes] = await Promise.all([
+                fetch(`${import.meta.env.VITE_API_URL}/cart/summary`, {
+                    credentials: "include",
+                }),
+                fetch(`${import.meta.env.VITE_API_URL}/wishlist/get`, {
+                    credentials: "include",
+                }),
+            ]);
+
+            console.log("[Navbar] /cart/summary status:", cartRes.status);
+            console.log("[Navbar] /wishlist/get status:", wishlistRes.status);
+
+            if (cartRes.ok) {
+                const cartData = await cartRes.json();
+                console.log("[Navbar] cart response:", cartData);
+                if (cartData.success) {
+                    const c = cartData.totalItems || 0;
+                    console.log("[Navbar] setting cartCount =", c);
+                    setCartCount(c);
+                }
+            } else {
+                console.warn("[Navbar] cart fetch not ok, status:", cartRes.status);
+            }
+
+            if (wishlistRes.ok) {
+                const wishlistData = await wishlistRes.json();
+                console.log("[Navbar] wishlist response:", wishlistData);
+                if (wishlistData.success) {
+                    const w = wishlistData.count || 0;
+                    console.log("[Navbar] setting wishlistCount =", w);
+                    setWishlistCount(w);
+                }
+            } else {
+                console.warn("[Navbar] wishlist fetch not ok, status:", wishlistRes.status);
+            }
+        } catch (error) {
+            console.error("[Navbar] Failed to fetch counts:", error);
+        }
+    };
+
+    // On route change: verify auth, then fetch counts
     useEffect(() => {
-        checkAuth();
+        const run = async () => {
+            console.log("[Navbar] route changed:", location.pathname);
+            const loggedIn = await checkAuth();
+            if (loggedIn) {
+                await fetchCounts();
+            } else {
+                console.log("[Navbar] not logged in, resetting counts to 0");
+                setCartCount(0);
+                setWishlistCount(0);
+            }
+        };
+        run();
     }, [location]);
 
     // Lock scroll when menu open
@@ -158,8 +219,27 @@ const Navbar = () => {
                     {/* DESKTOP ICONS */}
                     <div className="navbar-icons">
                         <FiSearch />
-                        <FiHeart onClick={() => handleProtectedNavigation("/wishlist")} />
-                        <FiShoppingCart onClick={handleCartClick} />
+
+                        <div
+                            className="navbar-icon-wrap"
+                            onClick={() => handleProtectedNavigation("/wishlist")}
+                        >
+                            <FiHeart className={`navbar-heart ${wishlistCount > 0 ? "active" : ""}`} />
+                            {wishlistCount > 0 && (
+                                <span className="navbar-badge">{wishlistCount}</span>
+                            )}
+                        </div>
+
+                        <div
+                            className="navbar-icon-wrap"
+                            onClick={handleCartClick}
+                        >
+                            <FiShoppingCart />
+                            {cartCount > 0 && (
+                                <span className="navbar-badge">{cartCount}</span>
+                            )}
+                        </div>
+
                         <FiUser onClick={() => handleProtectedNavigation("/profile")} />
                     </div>
 
@@ -229,14 +309,33 @@ const Navbar = () => {
                 {/* MOBILE ICONS */}
                 <div className="navbar-mobile-icons">
                     <FiSearch />
-                    <FiHeart onClick={() => {
-                        setMenuOpen(false);
-                        handleProtectedNavigation("/wishlist");
-                    }} />
-                    <FiShoppingCart onClick={() => {
-                        setMenuOpen(false);
-                        handleCartClick();
-                    }} />
+
+                    <div
+                        className="navbar-icon-wrap"
+                        onClick={() => {
+                            setMenuOpen(false);
+                            handleProtectedNavigation("/wishlist");
+                        }}
+                    >
+                        <FiHeart className={`navbar-heart ${wishlistCount > 0 ? "active" : ""}`} />
+                        {wishlistCount > 0 && (
+                            <span className="navbar-badge">{wishlistCount}</span>
+                        )}
+                    </div>
+
+                    <div
+                        className="navbar-icon-wrap"
+                        onClick={() => {
+                            setMenuOpen(false);
+                            handleCartClick();
+                        }}
+                    >
+                        <FiShoppingCart />
+                        {cartCount > 0 && (
+                            <span className="navbar-badge">{cartCount}</span>
+                        )}
+                    </div>
+
                     <FiUser onClick={() => {
                         setMenuOpen(false);
                         handleProtectedNavigation("/profile");
@@ -244,11 +343,11 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Cart Sidebar Component - Add this at the end */}
+            {/* Cart Sidebar Component */}
             {showCartSidebar && (
-                <CartSidebar 
-                    isOpen={showCartSidebar} 
-                    onClose={() => setShowCartSidebar(false)} 
+                <CartSidebar
+                    isOpen={showCartSidebar}
+                    onClose={() => setShowCartSidebar(false)}
                 />
             )}
         </>

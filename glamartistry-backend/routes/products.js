@@ -143,8 +143,10 @@ router.post("/create", authAdmin, upload.fields([
 // ========== GET ALL PRODUCTS ==========
 router.get("/get-all", async (req, res) => {
     try {
-        const { page = 1, limit = 10, search = "", mainCategory, subCategory } = req.query;
+        const { page = 1, limit = 10, search = "", mainCategory, subCategory, random } = req.query;
         const skip = (parseInt(page) - 1) * parseInt(limit);
+        const limitNum = parseInt(limit);
+        const isRandom = random === "true";
 
         let query = {};
         if (search) {
@@ -157,15 +159,42 @@ router.get("/get-all", async (req, res) => {
             query.subCategory = subCategory.toLowerCase();
         }
 
-        const [products, total] = await Promise.all([
-            Product.find(query)
-                .select("productId name thumbnail description createdAt variations mainCategory subCategory")
-                .skip(skip)
-                .limit(parseInt(limit))
-                .sort({ createdAt: -1 })
-                .lean(),
-            Product.countDocuments(query),
-        ]);
+        let products;
+        let total;
+
+        if (isRandom) {
+            // Random mode — $sample returns random docs matching the filter
+            products = await Product.aggregate([
+                { $match: query },
+                { $sample: { size: limitNum } },
+                {
+                    $project: {
+                        productId: 1,
+                        name: 1,
+                        thumbnail: 1,
+                        description: 1,
+                        createdAt: 1,
+                        mainCategory: 1,
+                        subCategory: 1,
+                        variations: 1,
+                    },
+                },
+            ]);
+            total = products.length;
+        } else {
+            // Existing behavior — unchanged
+            const [found, count] = await Promise.all([
+                Product.find(query)
+                    .select("productId name thumbnail description createdAt variations mainCategory subCategory")
+                    .skip(skip)
+                    .limit(limitNum)
+                    .sort({ createdAt: -1 })
+                    .lean(),
+                Product.countDocuments(query),
+            ]);
+            products = found;
+            total = count;
+        }
 
         // Get inventory for each product to show stock
         const productsWithPrices = await Promise.all(products.map(async (p) => {
@@ -198,9 +227,9 @@ router.get("/get-all", async (req, res) => {
             data: productsWithPrices,
             pagination: {
                 currentPage: parseInt(page),
-                totalPages: Math.ceil(total / parseInt(limit)),
+                totalPages: Math.ceil(total / limitNum),
                 totalItems: total,
-                limit: parseInt(limit),
+                limit: limitNum,
             },
         });
     } catch (error) {

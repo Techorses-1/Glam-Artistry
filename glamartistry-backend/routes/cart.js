@@ -4,6 +4,7 @@ const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 const Inventory = require("../models/Inventory");
 const authUser = require("../middleware/authUser");
+const mongoose = require("mongoose");
 
 // ========== ADD TO CART ==========
 // POST /cart/add
@@ -55,17 +56,17 @@ router.post("/add", authUser, async (req, res) => {
         if (existingItem) {
             // Update quantity
             const newQuantity = existingItem.quantity + quantity;
-            
+
             if (inventory && inventory.stock < newQuantity) {
                 return res.status(400).json({
                     success: false,
                     message: `Only ${inventory.stock} items available in stock`
                 });
             }
-            
+
             existingItem.quantity = newQuantity;
             await existingItem.save();
-            
+
             return res.json({
                 success: true,
                 message: "Cart updated successfully",
@@ -122,7 +123,7 @@ router.get("/get", authUser, async (req, res) => {
         const cartWithDetails = await Promise.all(
             cartItems.map(async (item) => {
                 const product = await Product.findOne({ productId: item.productId }).lean();
-                
+
                 if (!product) {
                     return null;
                 }
@@ -136,11 +137,11 @@ router.get("/get", authUser, async (req, res) => {
                 }
 
                 // Get inventory stock
-                const inventory = await Inventory.findOne({ 
-                    productId: item.productId, 
-                    variationId: item.variationId 
+                const inventory = await Inventory.findOne({
+                    productId: item.productId,
+                    variationId: item.variationId
                 });
-                
+
                 const stock = inventory?.stock || 0;
                 const isLowStock = stock <= 5 && stock > 0;
                 const isOutOfStock = stock === 0;
@@ -301,7 +302,7 @@ router.delete("/clear", authUser, async (req, res) => {
 router.get("/summary", authUser, async (req, res) => {
     try {
         const totalItems = await Cart.aggregate([
-            { $match: { userId: req.user.id } },
+            { $match: { userId: new mongoose.Types.ObjectId(req.user.id) } },
             { $group: { _id: null, total: { $sum: "$quantity" } } }
         ]);
 

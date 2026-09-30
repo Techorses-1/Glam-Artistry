@@ -3,6 +3,7 @@ const router = express.Router();
 const Wishlist = require("../models/Wishlist");
 const Product = require("../models/Product");
 const authUser = require("../middleware/authUser");
+const mongoose = require("mongoose");
 
 // ========== ADD TO WISHLIST ==========
 // POST /wishlist/add
@@ -154,18 +155,13 @@ router.get("/get", authUser, async (req, res) => {
                     return null;
                 }
 
-                // Get variation image (first image from variation)
-                const variationImage = variation.images && variation.images.length > 0
-                    ? variation.images[0]
-                    : product.thumbnail;
-
                 return {
                     wishlistId: item._id,
                     productId: product.productId,
                     productName: product.name,
                     variationId: item.variationId,
                     designName: variation.designName,
-                    thumbnail: variationImage,
+                    thumbnail: product.thumbnail,   // always product thumbnail
                     subCategory: product.subCategory,
                     mainCategory: product.mainCategory,
                     sellingPrice: variation.sellingPrice,

@@ -478,3 +478,22 @@
         transform: scale(1.1);
     }
 }
+
+.dp-card__variations-count {
+    font-family: "Content", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2b2664;
+    background: rgba(43, 38, 100, 0.08);
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin: 10px 0 0;
+    letter-spacing: 0.2px;
+    transition: all 0.3s ease;
+}
+
+.dp-card:hover .dp-card__variations-count {
+    background: #2b2664;
+    color: #fff;
+}
