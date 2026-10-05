@@ -26,6 +26,7 @@ import ProductPage from "./Pages/ProductPage/ProductPage";
 import CheckoutPage from "./Pages/Checkout/CheckoutPage";
 import AdminOrders from "./Pages/Admin/OrderManage/AdminOrders";
 import NotFound from "./Pages/404/NotFound";
+import Contact from "./Pages/Contact/Contact";
 
 // Wrapper component to conditionally show Navbar & Footer
 const AppContent = () => {
@@ -41,6 +42,7 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/drinkware" element={<Drinkware />} />
         <Route path="/kitchenware" element={<Kitchenware />} />
 

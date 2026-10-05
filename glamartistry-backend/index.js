@@ -51,6 +51,8 @@ const inventoryRoutes = require("./routes/inventory");
 const cartRoutes = require("./routes/cart");
 const orderRoutes = require("./routes/orders");
 const reviewRoutes = require("./routes/reviewRoutes");
+const adminDashboardRoutes = require("./routes/adminDashboard");
+
 
 // ================= API ROUTES =================
 app.use("/admin", adminRoutes);
@@ -63,6 +65,8 @@ app.use("/inventory", inventoryRoutes);
 app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
 app.use("/reviews", reviewRoutes);
+app.use("/admin/dashboard", adminDashboardRoutes);
+
 
 // ================= TEST ROUTE =================
 app.get("/", (req, res) => {

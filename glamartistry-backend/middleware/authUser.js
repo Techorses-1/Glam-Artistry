@@ -2,11 +2,9 @@ const jwt = require("jsonwebtoken");
 
 const authUser = (req, res, next) => {
 
-    console.log("🔐 Auth middleware called");
-    console.log("Cookies received:", req.cookies);
+    
     try {
         const token = req.cookies.userToken;
-        console.log("Token present:", !!token);
 
         if (!token) {
             console.log("❌ No token found in cookies");

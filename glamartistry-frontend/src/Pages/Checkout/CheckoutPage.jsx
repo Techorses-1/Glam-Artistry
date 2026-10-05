@@ -495,7 +495,7 @@ const CheckoutPage = () => {
                                         <span>₹50</span>
                                     </div>
                                     <div className="breakdown-row">
-                                        <span>Tax (GST 5%)</span>
+                                        <span>Tax (GST 18%)</span>
                                         <span>{formatPrice(orderSummary.tax)}</span>
                                     </div>
                                     <div className="breakdown-divider"></div>
@@ -649,7 +649,7 @@ const CheckoutPage = () => {
                                             <span>₹50</span>
                                         </div>
                                         <div className="summary-row">
-                                            <span>Tax (GST 5%)</span>
+                                            <span>Tax (GST 18%)</span>
                                             <span>{formatPrice(orderSummary.tax)}</span>
                                         </div>
                                         <div className="summary-divider"></div>

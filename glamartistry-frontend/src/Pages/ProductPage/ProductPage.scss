@@ -164,6 +164,7 @@ $transition: all 0.22s ease;
         background: $bg-light;
         border-radius: $radius;
         overflow: hidden;
+        border: 1.5px solid $brand;
 
         img {
             width: 100%;

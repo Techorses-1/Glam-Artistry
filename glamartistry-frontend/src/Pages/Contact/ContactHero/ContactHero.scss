@@ -1,0 +1,124 @@
+// ContactHero.scss
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap');
+
+.contact-hero {
+    width: 100%;
+    height: 85vh;
+    min-height: 380px;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+}
+
+.contact-hero__overlay {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.contact-hero__content {
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.contact-hero__title {
+    color: #ffffff;
+    font-family: "Fraunces", serif;
+    font-size: 80px;
+    font-weight: 600;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.contact-hero__subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-family: "Content", sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 560px;
+    margin: 0;
+}
+
+/* LARGE TABLET / SMALL LAPTOP */
+@media (max-width: 1200px) {
+    .contact-hero__title {
+        font-size: 68px;
+    }
+}
+
+/* TABLET */
+@media (max-width: 992px) {
+    .contact-hero {
+        height: 50vh;
+        min-height: 340px;
+    }
+
+    .contact-hero__title {
+        font-size: 48px;
+    }
+
+    .contact-hero__subtitle {
+        font-size: 16px;
+    }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .contact-hero {
+        height: 45vh;
+        min-height: 300px;
+    }
+
+    .contact-hero__content {
+        gap: 14px;
+    }
+
+    .contact-hero__title {
+        font-size: 38px;
+    }
+
+    .contact-hero__subtitle {
+        font-size: 14px;
+        max-width: 420px;
+    }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 480px) {
+    .contact-hero {
+        min-height: 260px;
+    }
+
+    .contact-hero__title {
+        font-size: 30px;
+
+        br {
+            display: none;
+        }
+    }
+
+    .contact-hero__subtitle {
+        font-size: 13px;
+    }
+}

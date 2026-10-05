@@ -71,7 +71,6 @@ const AdminSidebar = ({ children }) => {
         { icon: <FiPackage />, title: "Products", path: "/admin/products" },
         { icon: <FiShoppingCart />, title: "Orders", path: "/admin/orders" },
         { icon: <FiShoppingCart />, title: "Inventory", path: "/admin/inventory" },
-        { icon: <FiUsers />, title: "Users", path: "/admin/users" },
     ];
 
     return (
