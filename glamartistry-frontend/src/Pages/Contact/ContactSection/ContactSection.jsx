@@ -4,7 +4,8 @@ import "./ContactSection.scss";
 import { motion, useInView } from "framer-motion";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
     FiMapPin,
     FiPhone,
@@ -167,6 +168,8 @@ const ContactSection = () => {
 
     return (
         <section className="contact-section" ref={sectionRef}>
+            <ToastContainer position="top-right" autoClose={3000} />
+
             <div className="contact-section__inner">
                 <motion.div
                     className="contact-section__header"
