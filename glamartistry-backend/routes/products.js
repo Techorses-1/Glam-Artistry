@@ -8,7 +8,9 @@ const authAdmin = require("../middleware/authAdmin");
 const upload = require("../middleware/upload");
 const { uploadToS3, uploadMultipleToS3, deleteFromS3, deleteMultipleFromS3 } = require("../utils/s3Upload");
 
-// Helper function to parse JSON fields
+// ========== HELPERS ==========
+
+// Parse JSON fields safely
 const parseJSONField = (field) => {
     if (!field) return {};
     try {
@@ -18,7 +20,38 @@ const parseJSONField = (field) => {
     }
 };
 
-// Helper function to create inventory for a product
+// ✅ NEW: Generate a URL-safe slug from a product name
+const generateSlugBase = (name) => {
+    return name
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "")   // remove special chars (keep letters, numbers, space, dash)
+        .replace(/\s+/g, "-")           // spaces → dash
+        .replace(/-+/g, "-")            // multiple dashes → single
+        .replace(/^-|-$/g, "");         // trim leading/trailing dashes
+};
+
+// ✅ NEW: Generate a UNIQUE slug (adds -1, -2 if duplicate)
+const generateUniqueSlug = async (name, excludeProductId = null) => {
+    const base = generateSlugBase(name);
+    if (!base) return `product-${Date.now()}`;   // safety fallback
+
+    let slug = base;
+    let counter = 1;
+
+    while (true) {
+        const query = { slug };
+        if (excludeProductId) query.productId = { $ne: excludeProductId };
+
+        const exists = await Product.findOne(query).lean();
+        if (!exists) return slug;
+
+        slug = `${base}-${counter}`;
+        counter++;
+    }
+};
+
+// Create inventory for each variation
 const createInventoryForProduct = async (productId, variations, updatedBy = "system") => {
     const inventoryItems = [];
     for (const variation of variations) {
@@ -35,13 +68,13 @@ const createInventoryForProduct = async (productId, variations, updatedBy = "sys
     return inventoryItems;
 };
 
-// Helper function to delete inventory for a product
+// Delete inventory for a product
 const deleteInventoryForProduct = async (productId) => {
     await Inventory.deleteMany({ productId });
     await StockHistory.deleteMany({ productId });
 };
 
-// Helper function to delete inventory for a specific variation
+// Delete inventory for a specific variation
 const deleteInventoryForVariation = async (productId, variationId) => {
     await Inventory.deleteOne({ productId, variationId });
     await StockHistory.deleteOne({ productId, variationId });
@@ -81,6 +114,10 @@ router.post("/create", authAdmin, upload.fields([
 
         const productId = `PROD-${Date.now()}`;
 
+        // ✅ GENERATE UNIQUE SLUG FROM NAME
+        const slug = await generateUniqueSlug(name);
+        console.log(`📝 Generated slug: "${slug}" for product "${name}"`);
+
         // Upload thumbnail
         const thumbnailUrl = await uploadToS3(files.thumbnail[0], `products/${productId}/thumbnail`);
 
@@ -115,6 +152,7 @@ router.post("/create", authAdmin, upload.fields([
         // Create product
         const product = new Product({
             productId,
+            slug,                // ✅ SAVE SLUG
             name,
             description,
             specifications: parsedSpecifications,
@@ -126,7 +164,7 @@ router.post("/create", authAdmin, upload.fields([
 
         await product.save();
 
-        // ✅ CREATE INVENTORY FOR EACH VARIATION
+        // Create inventory for each variation
         await createInventoryForProduct(productId, processedVariations, req.admin?.email || "system");
 
         res.status(201).json({
@@ -163,13 +201,13 @@ router.get("/get-all", async (req, res) => {
         let total;
 
         if (isRandom) {
-            // Random mode — $sample returns random docs matching the filter
             products = await Product.aggregate([
                 { $match: query },
                 { $sample: { size: limitNum } },
                 {
                     $project: {
                         productId: 1,
+                        slug: 1,           // ✅ INCLUDE SLUG
                         name: 1,
                         thumbnail: 1,
                         description: 1,
@@ -182,10 +220,9 @@ router.get("/get-all", async (req, res) => {
             ]);
             total = products.length;
         } else {
-            // Existing behavior — unchanged
             const [found, count] = await Promise.all([
                 Product.find(query)
-                    .select("productId name thumbnail description createdAt variations mainCategory subCategory")
+                    .select("productId slug name thumbnail description createdAt variations mainCategory subCategory")   // ✅ ADDED slug
                     .skip(skip)
                     .limit(limitNum)
                     .sort({ createdAt: -1 })
@@ -196,7 +233,7 @@ router.get("/get-all", async (req, res) => {
             total = count;
         }
 
-        // Get inventory for each product to show stock
+        // Get inventory for each product
         const productsWithPrices = await Promise.all(products.map(async (p) => {
             const inventories = await Inventory.find({ productId: p.productId });
             const inventoryMap = {};
@@ -206,6 +243,7 @@ router.get("/get-all", async (req, res) => {
 
             return {
                 productId: p.productId,
+                slug: p.slug,              // ✅ RETURN SLUG
                 name: p.name,
                 thumbnail: p.thumbnail,
                 description: p.description,
@@ -237,10 +275,17 @@ router.get("/get-all", async (req, res) => {
     }
 });
 
-// ========== GET SINGLE PRODUCT ==========
+// ========== GET SINGLE PRODUCT (by slug OR productId) ==========
 router.get("/get/:id", async (req, res) => {
     try {
-        const product = await Product.findOne({ productId: req.params.id }).lean();
+        const { id } = req.params;
+
+        // ✅ Try slug first, then fallback to productId (backward compatibility)
+        let product = await Product.findOne({ slug: id.toLowerCase() }).lean();
+        if (!product) {
+            product = await Product.findOne({ productId: id }).lean();
+        }
+
         if (!product) {
             return res.status(404).json({ success: false, message: "Product not found" });
         }
@@ -266,6 +311,7 @@ router.get("/get/:id", async (req, res) => {
     }
 });
 
+// ========== UPDATE PRODUCT ==========
 router.put("/update/:id", authAdmin, upload.fields([
     { name: "thumbnail", maxCount: 1 },
     { name: "variationImages", maxCount: 50 }
@@ -280,7 +326,6 @@ router.put("/update/:id", authAdmin, upload.fields([
         const files = req.files;
         const adminEmail = req.admin?.email || "system";
 
-        // 🔍 DEBUG LOGS
         console.log("========== UPDATE PRODUCT ==========");
         console.log("Product ID:", req.params.id);
         console.log("Received variations:", variations);
@@ -312,8 +357,24 @@ router.put("/update/:id", authAdmin, upload.fields([
             product.subCategory = subCategory.toLowerCase();
         }
 
-        // Update basic fields
-        if (name) product.name = name;
+        // ✅ UPDATE NAME + REGENERATE SLUG ONLY IF NAME CHANGED
+        if (name && name !== product.name) {
+            console.log(`📝 Name changed: "${product.name}" → "${name}"`);
+            console.log(`   Old slug: "${product.slug}"`);
+
+            product.name = name;
+
+            // Regenerate slug (unique, excluding this product)
+            const newSlug = await generateUniqueSlug(name, product.productId);
+            console.log(`   New slug: "${newSlug}"`);
+            product.slug = newSlug;
+        } else if (name && !product.slug) {
+            // Safety: if product had no slug (existing data), generate one
+            product.name = name;
+            product.slug = await generateUniqueSlug(name, product.productId);
+            console.log(`   Generated missing slug: "${product.slug}"`);
+        }
+
         if (description) product.description = description;
         if (specifications) product.specifications = parseJSONField(specifications);
 
@@ -326,7 +387,7 @@ router.put("/update/:id", authAdmin, upload.fields([
             }
         }
 
-        // ✅ DELETE INVENTORY FOR REMOVED VARIATIONS
+        // Delete inventory for removed variations
         if (removedVariationIds) {
             const removedIds = parseJSONField(removedVariationIds);
             if (Array.isArray(removedIds) && removedIds.length > 0) {
@@ -385,7 +446,7 @@ router.put("/update/:id", authAdmin, upload.fields([
 
                     console.log(`Final images count for ${variation.designName}: ${imageUrls.length}`);
 
-                    // ✅ CREATE INVENTORY FOR NEW VARIATION (if doesn't exist)
+                    // Create inventory for new variation (if doesn't exist)
                     const existingInventory = await Inventory.findOne({ productId: product.productId, variationId });
                     if (!existingInventory) {
                         const newInventory = new Inventory({
@@ -434,7 +495,7 @@ router.delete("/delete/:id", authAdmin, async (req, res) => {
         const allVariationImages = product.variations.flatMap((v) => v.images);
         if (allVariationImages.length > 0) await deleteMultipleFromS3(allVariationImages);
 
-        // ✅ DELETE INVENTORY AND STOCK HISTORY FOR THIS PRODUCT
+        // Delete inventory and stock history
         await deleteInventoryForProduct(product.productId);
 
         // Delete product from database
@@ -442,6 +503,37 @@ router.delete("/delete/:id", authAdmin, async (req, res) => {
 
         res.json({ success: true, message: "Product deleted successfully" });
     } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// ========== 🆕 MIGRATION ROUTE (run ONCE to add slugs to old products) ==========
+// POST /products/admin/migrate-slugs
+router.post("/admin/migrate-slugs", authAdmin, async (req, res) => {
+    try {
+        const products = await Product.find({
+            $or: [{ slug: { $exists: false } }, { slug: null }, { slug: "" }]
+        });
+
+        console.log(`🔄 Migrating ${products.length} products without slug...`);
+
+        let updated = 0;
+        for (const product of products) {
+            const slug = await generateUniqueSlug(product.name, product.productId);
+            product.slug = slug;
+            await product.save();
+            updated++;
+            console.log(`   ✓ "${product.name}" → "${slug}"`);
+        }
+
+        res.json({
+            success: true,
+            message: `Migration complete. ${updated} products updated.`,
+            total: products.length,
+            updated,
+        });
+    } catch (error) {
+        console.error("Migration error:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 });

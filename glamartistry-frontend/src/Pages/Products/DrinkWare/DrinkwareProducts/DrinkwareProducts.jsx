@@ -16,7 +16,7 @@ const ProductCard = ({ item, index, isInWishlist, onWishlistClick }) => {
 
     // Add this function
     const handleCardClick = () => {
-        navigate(`/product/${item.productId}`);
+        navigate(`/product/${item.slug || item.productId}`);
     };
     const cardVariants = {
         hidden: { opacity: 0, y: 50 },

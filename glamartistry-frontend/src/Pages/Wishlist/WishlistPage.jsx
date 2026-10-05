@@ -166,18 +166,30 @@ const WishlistPage = () => {
 
     const summary = calculateSummary();
 
-    // Product Card Component
     const ProductCard = ({ item }) => {
+        const navigate = useNavigate();   // ⬅️ ADD
+
         const discountPercent = getDiscountPercentage(item.sellingPrice, item.originalPrice);
         const isRemoving = removingItem === `${item.productId}-${item.variationId}`;
         const isAddingToCart = addingToCartItem === `${item.productId}-${item.variationId}`;
 
+        const handleCardClick = () => {
+            navigate(`/product/${item.slug || item.productId}`);
+        };
+
         return (
-            <div className="wp__product-card">
+            <div
+                className="wp__product-card"
+                onClick={handleCardClick}    // ⬅️ ADD
+                style={{ cursor: "pointer" }}
+            >
                 <div className="wp__product-image-wrap">
                     <button
                         className="wp__remove-btn"
-                        onClick={(e) => handleRemoveItem(item.productId, item.variationId, e)}
+                        onClick={(e) => {
+                            e.stopPropagation();    // ⬅️ ADD — warna card click bhi ho jayega
+                            handleRemoveItem(item.productId, item.variationId, e);
+                        }}
                         disabled={isRemoving}
                     >
                         {isRemoving ? <span className="wp__remove-spinner"></span> : <IoClose />}
@@ -214,7 +226,10 @@ const WishlistPage = () => {
                     </div>
                     <button
                         className="wp__move-to-cart"
-                        onClick={(e) => handleMoveToCart(item, e)}
+                        onClick={(e) => {
+                            e.stopPropagation();   // ⬅️ ADD — warna navigate bhi ho jayega
+                            handleMoveToCart(item, e);
+                        }}
                         disabled={isAddingToCart}
                     >
                         {isAddingToCart ? (
@@ -264,7 +279,7 @@ const WishlistPage = () => {
     if (loading) {
         return (
             <div className="wp">
-                <ToastContainer position="top-right" autoClose={3000} />
+                {/* <ToastContainer position="top-right" autoClose={3000} /> */}
                 <div className="wp__loading">
                     <div className="wp__loading-spinner"></div>
                     <p>Loading your wishlist...</p>
@@ -277,7 +292,7 @@ const WishlistPage = () => {
     if (wishlistItems.length === 0) {
         return (
             <div className="wp">
-                <ToastContainer position="top-right" autoClose={3000} />
+                {/* <ToastContainer position="top-right" autoClose={3000} /> */}
                 <div className="wp__empty">
                     <div className="wp__empty-icon">
                         <FiHeart />
@@ -298,7 +313,7 @@ const WishlistPage = () => {
 
     return (
         <div className="wp">
-            <ToastContainer position="top-right" autoClose={3000} />
+            {/* <ToastContainer position="top-right" autoClose={3000} /> */}
 
             <div className="wp__container">
                 {/* Header */}

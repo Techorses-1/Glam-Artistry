@@ -7,57 +7,38 @@ import "swiper/css/navigation";
 import { FiChevronLeft, FiChevronRight, FiHeart } from "react-icons/fi";
 import { motion, useInView } from "framer-motion";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ item, index, isInWishlist, onWishlistClick }) => {
+    const navigate = useNavigate();
+
+    const handleCardClick = () => {
+        navigate(`/product/${item.slug || item.productId}`);
+    };
+
     const cardVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.6,
-                delay: index * 0.05,
-                ease: [0.25, 0.46, 0.45, 0.94]
-            }
+            opacity: 1, y: 0,
+            transition: { duration: 0.6, delay: index * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }
         },
-        hover: {
-            y: -8,
-            transition: {
-                duration: 0.3,
-                ease: "easeOut"
-            }
-        }
+        hover: { y: -8, transition: { duration: 0.3, ease: "easeOut" } }
     };
 
     const imageVariants = {
-        hover: {
-            scale: 1.08,
-            transition: {
-                duration: 0.5,
-                ease: "easeOut"
-            }
-        }
+        hover: { scale: 1.08, transition: { duration: 0.5, ease: "easeOut" } }
     };
 
     const wishlistVariants = {
-        hover: {
-            scale: 1.15,
-            transition: {
-                duration: 0.2
-            }
-        },
-        tap: {
-            scale: 0.9
-        }
+        hover: { scale: 1.15, transition: { duration: 0.2 } },
+        tap: { scale: 0.9 }
     };
 
-    // Format category name for display
     const formatCategory = (str) => {
         if (!str) return "Kitchenware";
         return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     };
 
-    // Get the cheapest variation (lowest selling price)
     const getCheapestVariation = () => {
         if (!item.variations || item.variations.length === 0) {
             return {
@@ -67,11 +48,9 @@ const ProductCard = ({ item, index, isInWishlist, onWishlistClick }) => {
                 designName: null
             };
         }
-
         const cheapest = item.variations.reduce((min, current) => {
             return (current.sellingPrice < min.sellingPrice) ? current : min;
         }, item.variations[0]);
-
         return {
             sellingPrice: cheapest.sellingPrice,
             originalPrice: cheapest.originalPrice,
@@ -82,8 +61,6 @@ const ProductCard = ({ item, index, isInWishlist, onWishlistClick }) => {
 
     const { sellingPrice, originalPrice, variationId, designName } = getCheapestVariation();
     const hasDiscount = originalPrice && originalPrice > sellingPrice;
-
-    // Check if this product's cheapest variation is in wishlist
     const isInWishlistState = isInWishlist && variationId && isInWishlist(variationId);
 
     const handleWishlistClick = (e) => {
@@ -100,6 +77,8 @@ const ProductCard = ({ item, index, isInWishlist, onWishlistClick }) => {
             initial="hidden"
             animate="visible"
             whileHover="hover"
+            onClick={handleCardClick}
+            style={{ cursor: "pointer" }}
         >
             <motion.div className="kp-card__image-wrap">
                 <motion.img
@@ -107,9 +86,7 @@ const ProductCard = ({ item, index, isInWishlist, onWishlistClick }) => {
                     alt={item.name}
                     variants={imageVariants}
                     whileHover="hover"
-                    onError={(e) => {
-                        e.target.src = "https://via.placeholder.com/300x300?text=No+Image";
-                    }}
+                    onError={(e) => { e.target.src = "https://via.placeholder.com/300x300?text=No+Image"; }}
                 />
                 <motion.div
                     className={`kp-card__wishlist ${isInWishlistState ? "active" : ""}`}
@@ -144,6 +121,7 @@ const KitchenwareProducts = () => {
     const sectionRef = React.useRef(null);
     const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
+    const [activeCategory, setActiveCategory] = useState("bottles");
     const [currentPage, setCurrentPage] = useState(1);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -151,14 +129,19 @@ const KitchenwareProducts = () => {
     const [wishlistMap, setWishlistMap] = useState({});
     const productsPerPage = 12;
 
-    // Fetch wishlist to check which products are in it
+    const subCategories = [
+        { key: "bottles", label: "Bottles" },
+        { key: "glasses", label: "Glasses" },
+        { key: "coffee jars", label: "Coffee Jars" },
+        { key: "jug sets", label: "Jug Sets" }
+    ];
+
     const fetchWishlist = async () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/wishlist/get`, {
                 credentials: "include",
             });
             const data = await response.json();
-
             if (data.success && data.data) {
                 const map = {};
                 data.data.forEach(item => {
@@ -172,16 +155,14 @@ const KitchenwareProducts = () => {
         }
     };
 
-    // Fetch products from API - Kitchenware main category with subCategory = jars
     const fetchProducts = async () => {
         setLoading(true);
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/products/get-all?mainCategory=kitchenware&subCategory=jars&page=${currentPage}&limit=${productsPerPage}`,
+                `${import.meta.env.VITE_API_URL}/products/get-all?mainCategory=kitchenware&page=${currentPage}&limit=${productsPerPage}`,
                 { credentials: "include" }
             );
             const data = await response.json();
-
             if (data.success) {
                 setProducts(data.data);
                 setTotalPages(data.pagination.totalPages);
@@ -201,17 +182,13 @@ const KitchenwareProducts = () => {
         fetchWishlist();
     }, [currentPage]);
 
-    // Check if a specific product variation is in wishlist
     const checkWishlistStatus = (productId, variationId) => {
         const key = `${productId}-${variationId}`;
         return wishlistMap[key] || false;
     };
 
-    // Get cheapest variation details for a product
     const getCheapestVariationDetails = (product) => {
-        if (!product.variations || product.variations.length === 0) {
-            return null;
-        }
+        if (!product.variations || product.variations.length === 0) return null;
         const cheapest = product.variations.reduce((min, current) => {
             return (current.sellingPrice < min.sellingPrice) ? current : min;
         }, product.variations[0]);
@@ -221,19 +198,14 @@ const KitchenwareProducts = () => {
         };
     };
 
-    // Handle add/remove from wishlist
     const handleWishlistClick = async (productId, variationId, designName, productName) => {
         try {
-            // Check if user is logged in
             const response = await fetch(`${import.meta.env.VITE_API_URL}/users/profile`, {
                 credentials: "include",
             });
-
             if (!response.ok) {
                 toast.error("Please login to add items to wishlist");
-                setTimeout(() => {
-                    window.location.href = "/login";
-                }, 1500);
+                setTimeout(() => { window.location.href = "/login"; }, 1500);
                 return;
             }
 
@@ -241,13 +213,11 @@ const KitchenwareProducts = () => {
             const isCurrentlyInWishlist = checkWishlistStatus(productId, variationId);
 
             if (isCurrentlyInWishlist) {
-                // Remove from wishlist
                 const removeResponse = await fetch(
                     `${import.meta.env.VITE_API_URL}/wishlist/remove/${productId}/${variationId}`,
                     { method: "DELETE", credentials: "include" }
                 );
                 const removeData = await removeResponse.json();
-
                 if (removeData.success) {
                     toast.success(`${productName} (${designName}) removed from wishlist`);
                     const newMap = { ...wishlistMap };
@@ -257,7 +227,6 @@ const KitchenwareProducts = () => {
                     toast.error(removeData.message || "Failed to remove from wishlist");
                 }
             } else {
-                // Add to wishlist
                 const addResponse = await fetch(`${import.meta.env.VITE_API_URL}/wishlist/add`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -265,7 +234,6 @@ const KitchenwareProducts = () => {
                     body: JSON.stringify({ productId, variationId }),
                 });
                 const addData = await addResponse.json();
-
                 if (addData.success) {
                     toast.success(`${productName} (${designName}) added to wishlist`);
                     setWishlistMap({ ...wishlistMap, [key]: true });
@@ -281,54 +249,55 @@ const KitchenwareProducts = () => {
         }
     };
 
+    const filteredProducts = products.filter(p => p.subCategory === activeCategory);
+
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const currentProducts = filteredProducts.slice(startIndex, startIndex + productsPerPage);
+    const filteredTotalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+    const handleCategoryChange = (category) => {
+        setActiveCategory(category);
+        setCurrentPage(1);
+    };
+
     const contentVariants = {
         hidden: { opacity: 0, y: 40 },
         visible: {
+            opacity: 1, y: 0,
+            transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }
+        }
+    };
+
+    const buttonContainerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
             opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.7,
-                ease: [0.25, 0.46, 0.45, 0.94],
-                delay: 0.2
-            }
+            transition: { staggerChildren: 0.1, delayChildren: 0.4 }
         }
     };
 
     const buttonVariants = {
         hidden: { opacity: 0, scale: 0.9 },
         visible: {
-            opacity: 1,
-            scale: 1,
-            transition: {
-                duration: 0.5,
-                ease: "easeOut"
-            }
+            opacity: 1, scale: 1,
+            transition: { duration: 0.5, ease: "easeOut" }
         },
-        tap: {
-            scale: 0.95
-        }
+        hover: {
+            scale: 1.05,
+            backgroundColor: "#2b2664",
+            color: "#fff",
+            transition: { duration: 0.2, ease: "easeOut" }
+        },
+        tap: { scale: 0.95 }
     };
 
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: {
-                staggerChildren: 0.05,
-                delayChildren: 0.2
-            }
+            transition: { staggerChildren: 0.05, delayChildren: 0.2 }
         }
     };
-
-    // Loading state
-    // if (loading && products.length === 0) {
-    //     return (
-    //         <div className="kitchenware-loading">
-    //             <div className="loading-spinner"></div>
-    //             <p>Loading products...</p>
-    //         </div>
-    //     );
-    // }
 
     return (
         <motion.section
@@ -338,7 +307,6 @@ const KitchenwareProducts = () => {
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.5 }}
         >
-            {/* TEXT CONTENT + BUTTONS - WHITE BG */}
             <div className="kitchenware-content">
                 <motion.div
                     variants={contentVariants}
@@ -364,41 +332,43 @@ const KitchenwareProducts = () => {
                     </p>
                 </motion.div>
 
-                {/* BUTTON - ONLY JARS */}
                 <motion.div
                     className="kitchenware-buttons"
-                    variants={contentVariants}
+                    variants={buttonContainerVariants}
                     initial="hidden"
                     animate={isInView ? "visible" : "hidden"}
                 >
-                    <motion.button
-                        className="active"
-                        variants={buttonVariants}
-                        whileTap="tap"
-                    >
-                        Jars
-                    </motion.button>
+                    {subCategories.map((cat) => (
+                        <motion.button
+                            key={cat.key}
+                            className={activeCategory === cat.key ? "active" : ""}
+                            variants={buttonVariants}
+                            whileHover="hover"
+                            whileTap="tap"
+                            onClick={() => handleCategoryChange(cat.key)}
+                        >
+                            {cat.label}
+                        </motion.button>
+                    ))}
                 </motion.div>
             </div>
 
-            {/* PRODUCTS SECTION WRAPPER WITH eaf3f3 BG */}
             <div className="kitchenware-products-wrapper">
-                {/* No products message */}
-                {products.length === 0 && !loading ? (
+                {filteredProducts.length === 0 && !loading ? (
                     <div className="no-products">
-                        <p>No products found in Jars category.</p>
+                        <p>No products found in {activeCategory} category.</p>
                     </div>
                 ) : (
                     <>
-                        {/* DESKTOP GRID WITH PAGINATION */}
                         <div className="kp-desktop-view">
                             <motion.div
                                 className="kp-desktop-grid"
                                 variants={containerVariants}
                                 initial="hidden"
                                 animate={isInView ? "visible" : "hidden"}
+                                key={activeCategory}
                             >
-                                {products.map((item, index) => {
+                                {currentProducts.map((item, index) => {
                                     const cheapestVar = getCheapestVariationDetails(item);
                                     return (
                                         <ProductCard
@@ -414,8 +384,7 @@ const KitchenwareProducts = () => {
                                 })}
                             </motion.div>
 
-                            {/* PAGINATION */}
-                            {totalPages > 1 && (
+                            {filteredTotalPages > 1 && (
                                 <div className="kp-pagination">
                                     <button
                                         className={`kp-page-btn ${currentPage === 1 ? "disabled" : ""}`}
@@ -425,7 +394,7 @@ const KitchenwareProducts = () => {
                                         Previous
                                     </button>
                                     <div className="kp-page-numbers">
-                                        {[...Array(totalPages)].map((_, i) => (
+                                        {[...Array(filteredTotalPages)].map((_, i) => (
                                             <button
                                                 key={i}
                                                 className={`kp-page-num ${currentPage === i + 1 ? "active" : ""}`}
@@ -436,9 +405,9 @@ const KitchenwareProducts = () => {
                                         ))}
                                     </div>
                                     <button
-                                        className={`kp-page-btn ${currentPage === totalPages ? "disabled" : ""}`}
-                                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                        disabled={currentPage === totalPages}
+                                        className={`kp-page-btn ${currentPage === filteredTotalPages ? "disabled" : ""}`}
+                                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, filteredTotalPages))}
+                                        disabled={currentPage === filteredTotalPages}
                                     >
                                         Next
                                     </button>
@@ -446,20 +415,16 @@ const KitchenwareProducts = () => {
                             )}
                         </div>
 
-                        {/* TABLET SLIDER */}
                         <div className="kp-tablet-view">
                             <div className="kp-slider-wrap">
                                 <Swiper
                                     modules={[Navigation, A11y]}
                                     slidesPerView={2}
                                     spaceBetween={20}
-                                    loop={products.length > 2}
-                                    navigation={{
-                                        prevEl: ".kp-tablet-prev",
-                                        nextEl: ".kp-tablet-next",
-                                    }}
+                                    loop={filteredProducts.length > 2}
+                                    navigation={{ prevEl: ".kp-tablet-prev", nextEl: ".kp-tablet-next" }}
                                 >
-                                    {products.map((item, index) => {
+                                    {filteredProducts.map((item, index) => {
                                         const cheapestVar = getCheapestVariationDetails(item);
                                         return (
                                             <SwiperSlide key={item.productId || item.id}>
@@ -476,30 +441,22 @@ const KitchenwareProducts = () => {
                                     })}
                                 </Swiper>
                                 <div className="kp-arrows">
-                                    <button className="kp-arrow kp-tablet-prev">
-                                        <FiChevronLeft />
-                                    </button>
-                                    <button className="kp-arrow kp-tablet-next">
-                                        <FiChevronRight />
-                                    </button>
+                                    <button className="kp-arrow kp-tablet-prev"><FiChevronLeft /></button>
+                                    <button className="kp-arrow kp-tablet-next"><FiChevronRight /></button>
                                 </div>
                             </div>
                         </div>
 
-                        {/* MOBILE SLIDER */}
                         <div className="kp-mobile-view">
                             <div className="kp-slider-wrap">
                                 <Swiper
                                     modules={[Navigation, A11y]}
                                     slidesPerView={1}
                                     spaceBetween={16}
-                                    loop={products.length > 1}
-                                    navigation={{
-                                        prevEl: ".kp-mobile-prev",
-                                        nextEl: ".kp-mobile-next",
-                                    }}
+                                    loop={filteredProducts.length > 1}
+                                    navigation={{ prevEl: ".kp-mobile-prev", nextEl: ".kp-mobile-next" }}
                                 >
-                                    {products.map((item, index) => {
+                                    {filteredProducts.map((item, index) => {
                                         const cheapestVar = getCheapestVariationDetails(item);
                                         return (
                                             <SwiperSlide key={item.productId || item.id}>
@@ -516,12 +473,8 @@ const KitchenwareProducts = () => {
                                     })}
                                 </Swiper>
                                 <div className="kp-arrows">
-                                    <button className="kp-arrow kp-mobile-prev">
-                                        <FiChevronLeft />
-                                    </button>
-                                    <button className="kp-arrow kp-mobile-next">
-                                        <FiChevronRight />
-                                    </button>
+                                    <button className="kp-arrow kp-mobile-prev"><FiChevronLeft /></button>
+                                    <button className="kp-arrow kp-mobile-next"><FiChevronRight /></button>
                                 </div>
                             </div>
                         </div>

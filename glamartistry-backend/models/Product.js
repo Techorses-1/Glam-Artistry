@@ -35,6 +35,16 @@ const productSchema = new mongoose.Schema(
             unique: true,
             default: () => `PRD-${Date.now()}-${uuidv4().substr(0, 8)}`,
         },
+
+        // ✅ NEW FIELD
+        slug: {
+            type: String,
+            unique: true,
+            lowercase: true,
+            trim: true,
+            index: true,
+        },
+
         name: {
             type: String,
             required: true,

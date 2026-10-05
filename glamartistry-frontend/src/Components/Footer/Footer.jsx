@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation, Link } from "react-router-dom";
 import "./Footer.scss";
 import { FiInstagram, FiFacebook, FiLinkedin, FiYoutube, FiMapPin } from "react-icons/fi";
 import { motion, useInView } from "framer-motion";
@@ -7,6 +8,7 @@ import logo from "../../assets/logo/logo.png";
 const Footer = () => {
   const sectionRef = React.useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+  const location = useLocation();   // ✅ ADDED
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -55,6 +57,9 @@ const Footer = () => {
     }
   };
 
+  // ✅ Helper — check if link is active
+  const isActive = (path) => location.pathname === path;
+
   const handleContactClick = () => {
     window.location.href = "mailto:glamartistry@gmail.com";
   };
@@ -99,13 +104,19 @@ const Footer = () => {
           <h4>COMPANY</h4>
           <ul>
             <motion.li variants={linkVariants} whileHover="hover">
-              <a href="/">Home</a>
+              <Link to="/" className={isActive("/") ? "active-link" : ""}>
+                Home
+              </Link>
             </motion.li>
             <motion.li variants={linkVariants} whileHover="hover">
-              <a href="/contact">Contact</a>
+              <Link to="/contact" className={isActive("/contact") ? "active-link" : ""}>
+                Contact
+              </Link>
             </motion.li>
             <motion.li variants={linkVariants} whileHover="hover">
-              <a href="/gifts">Gifts</a>
+              <Link to="/gifts" className={isActive("/gifts") ? "active-link" : ""}>
+                Gifts
+              </Link>
             </motion.li>
           </ul>
         </motion.div>
@@ -115,10 +126,20 @@ const Footer = () => {
           <h4>PRODUCTS</h4>
           <ul>
             <motion.li variants={linkVariants} whileHover="hover">
-              <a href="/drinkware">Drinkware</a>
+              <Link
+                to="/drinkware"
+                className={isActive("/drinkware") ? "active-link" : ""}
+              >
+                Drinkware
+              </Link>
             </motion.li>
             <motion.li variants={linkVariants} whileHover="hover">
-              <a href="/kitchenware">Kitchenware</a>
+              <Link
+                to="/kitchenware"
+                className={isActive("/kitchenware") ? "active-link" : ""}
+              >
+                Kitchenware
+              </Link>
             </motion.li>
           </ul>
         </motion.div>
@@ -147,7 +168,6 @@ const Footer = () => {
             onClick={handleMapClick}
             style={{ cursor: "pointer" }}
           >
-            {/* <FiMapPin size={14} style={{ marginRight: "5px" }} /> */}
             SayajiGanj Vadodara-391440, Gujarat.
           </motion.p>
         </motion.div>

@@ -19,7 +19,8 @@ import RelatedProducts from "./RelatedProducts/RelatedProducts";
 gsap.registerPlugin(ScrollTrigger);
 
 const ProductPage = () => {
-    const { productId } = useParams();
+    // 🔧 FIX: Rename to `identifier` — it can be slug OR productId now
+    const { productId: identifier } = useParams();
     const navigate = useNavigate();
 
     const sectionRef = useRef(null);
@@ -54,15 +55,17 @@ const ProductPage = () => {
         const fetchProduct = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/products/get/${productId}`, {
-                    credentials: "include",
-                });
+                const response = await fetch(
+                    `${import.meta.env.VITE_API_URL}/products/get/${identifier}`,
+                    { credentials: "include" }
+                );
                 const data = await response.json();
                 if (data.success) {
                     setProduct(data.data);
                     if (data.data.variations && data.data.variations.length > 0) {
                         setSelectedVariation(data.data.variations[0]);
-                        fetchInventory(data.data.variations[0].variationId);
+                        // 🔧 FIX: Pass actual productId from response, NOT URL param
+                        fetchInventory(data.data.productId, data.data.variations[0].variationId);
                     }
                 } else {
                     setError(data.message);
@@ -74,18 +77,18 @@ const ProductPage = () => {
             }
         };
 
-        if (productId) {
+        if (identifier) {
             fetchProduct();
         }
-    }, [productId]);
+    }, [identifier]);
 
-    // Fetch inventory when variation changes
-    const fetchInventory = async (variationId) => {
-        if (!variationId) return;
+    // 🔧 FIX: Accept actualProductId as parameter — inventory endpoint needs real productId
+    const fetchInventory = async (actualProductId, variationId) => {
+        if (!actualProductId || !variationId) return;
         setInventoryLoading(true);
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/inventory/status/${productId}/${variationId}`
+                `${import.meta.env.VITE_API_URL}/inventory/status/${actualProductId}/${variationId}`
             );
             const data = await response.json();
             if (data.success) {
@@ -110,12 +113,18 @@ const ProductPage = () => {
 
     // Fetch product reviews
     const fetchProductReviews = async () => {
-        if (!selectedVariation?.variationId) return;
+        if (!selectedVariation?.variationId || !product?.productId) return;
+
+        console.log("🔍 Fetching reviews for:", {
+            productId: product.productId,
+            variationId: selectedVariation.variationId
+        });
 
         setReviewsLoading(true);
         try {
+            // 🔧 FIX: Use product.productId (real ID) instead of URL param
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/reviews/product/${productId}/${selectedVariation.variationId}`,
+                `${import.meta.env.VITE_API_URL}/reviews/product/${product.productId}/${selectedVariation.variationId}`,
                 { credentials: "include" }
             );
             const data = await response.json();
@@ -137,10 +146,11 @@ const ProductPage = () => {
     // Check wishlist status
     useEffect(() => {
         const checkWishlist = async () => {
-            if (!selectedVariation) return;
+            if (!selectedVariation || !product?.productId) return;
             try {
+                // 🔧 FIX: Use product.productId (real ID) instead of URL param
                 const response = await fetch(
-                    `${import.meta.env.VITE_API_URL}/wishlist/check/${productId}/${selectedVariation.variationId}`,
+                    `${import.meta.env.VITE_API_URL}/wishlist/check/${product.productId}/${selectedVariation.variationId}`,
                     { credentials: "include" }
                 );
                 const data = await response.json();
@@ -150,17 +160,17 @@ const ProductPage = () => {
             }
         };
 
-        if (productId && selectedVariation) {
+        if (product?.productId && selectedVariation) {
             checkWishlist();
         }
-    }, [productId, selectedVariation]);
+    }, [product?.productId, selectedVariation]);
 
     // Fetch reviews when variation is selected initially
     useEffect(() => {
-        if (selectedVariation?.variationId) {
+        if (selectedVariation?.variationId && product?.productId) {
             fetchProductReviews();
         }
-    }, [selectedVariation]);
+    }, [selectedVariation, product?.productId]);
 
     // Handle window resize
     useEffect(() => {
@@ -174,8 +184,8 @@ const ProductPage = () => {
     // Handle variation change
     const handleVariationChange = (variation) => {
         setSelectedVariation(variation);
-        fetchInventory(variation.variationId);
-        fetchProductReviews();
+        // 🔧 FIX: Pass real productId from product state
+        fetchInventory(product.productId, variation.variationId);
     };
 
     // Stock helpers
@@ -264,7 +274,7 @@ const ProductPage = () => {
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify({
-                productId: product.productId,
+                productId: product.productId,        // ✅ already real ID
                 variationId: selectedVariation.variationId,
                 quantity: quantity,
                 designName: selectedVariation.designName,
@@ -291,7 +301,7 @@ const ProductPage = () => {
             state: {
                 buyNowMode: true,
                 product: {
-                    productId: product.productId,
+                    productId: product.productId,       // ✅ already real ID
                     variationId: selectedVariation.variationId,
                     designName: selectedVariation.designName,
                     quantity: quantity,
@@ -306,11 +316,13 @@ const ProductPage = () => {
     };
 
     const toggleWishlist = async () => {
-        if (!selectedVariation) return;
+        if (!selectedVariation || !product?.productId) return;
+
         if (isInWishlist) {
             try {
+                // 🔧 FIX: Use product.productId (real ID)
                 await fetch(
-                    `${import.meta.env.VITE_API_URL}/wishlist/remove/${productId}/${selectedVariation.variationId}`,
+                    `${import.meta.env.VITE_API_URL}/wishlist/remove/${product.productId}/${selectedVariation.variationId}`,
                     { method: "DELETE", credentials: "include" }
                 );
                 setIsInWishlist(false);
@@ -325,7 +337,7 @@ const ProductPage = () => {
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
                     body: JSON.stringify({
-                        productId,
+                        productId: product.productId,        // 🔧 FIX: real ID
                         variationId: selectedVariation.variationId,
                     }),
                 });
@@ -363,7 +375,7 @@ const ProductPage = () => {
 
     return (
         <div className="product-page">
-            <ToastContainer position="top-right" autoClose={3000} />
+            {/* <ToastContainer position="top-right" autoClose={3000} /> */}
 
             <div className="back-button-container">
                 <button className="back-button" onClick={() => navigate(-1)}>
@@ -439,7 +451,6 @@ const ProductPage = () => {
                         <h1 className="product-title">{product.name}</h1>
                         <p className="product-category">{product.subCategory}</p>
 
-                        {/* Reviews Row - CLICKABLE */}
                         <div
                             className="reviews-row reviews-row--clickable"
                             onClick={() => setShowReviewModal(true)}
@@ -477,7 +488,6 @@ const ProductPage = () => {
                             )}
                         </div>
 
-                        {/* Stock Status Display */}
                         <div className={`stock-status ${stockStatus}`}>
                             {inventoryLoading ? (
                                 <span className="stock-checking">⏳ Checking stock...</span>
@@ -578,7 +588,6 @@ const ProductPage = () => {
                 </div>
             </section>
 
-            {/* Related Products */}
             <RelatedProducts
                 currentProductId={product.productId}
                 mainCategory={product.mainCategory}
@@ -587,7 +596,6 @@ const ProductPage = () => {
 
             <CartSidebar isOpen={showCartSidebar} onClose={() => setShowCartSidebar(false)} />
 
-            {/* Review Modal */}
             {showReviewModal && (
                 <ProductReviewModal
                     reviews={reviewData.reviews}

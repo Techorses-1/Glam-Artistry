@@ -13,7 +13,7 @@ const ProductCard = ({ item, index, isInWishlist, onWishlistClick }) => {
     const navigate = useNavigate();
 
     const handleCardClick = () => {
-        navigate(`/product/${item.productId}`);
+        navigate(`/product/${item.slug || item.productId}`);
     };
 
     const cardVariants = {

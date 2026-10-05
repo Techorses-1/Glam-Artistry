@@ -13,7 +13,7 @@ const RelatedProductCard = ({ item, index, isInWishlist, onWishlistClick }) => {
     const navigate = useNavigate();
 
     const handleCardClick = () => {
-        navigate(`/product/${item.productId}`);
+        navigate(`/product/${item.slug || item.productId}`);
     };
 
     const cardVariants = {
@@ -181,19 +181,19 @@ const RelatedProducts = ({ currentProductId, mainCategory, subCategory }) => {
         setLoading(true);
         try {
             let relatedProducts = [];
-            
+
             // Step 1: Get products with same mainCategory + same subCategory
             const sameSubResponse = await fetch(
                 `${import.meta.env.VITE_API_URL}/products/get-all?mainCategory=${mainCategory}&subCategory=${subCategory}&limit=10`,
                 { credentials: "include" }
             );
             const sameSubData = await sameSubResponse.json();
-            
+
             if (sameSubData.success) {
                 let filtered = sameSubData.data.filter(p => p.productId !== currentProductId);
                 relatedProducts.push(...filtered);
             }
-            
+
             // Step 2: If less than 4, get products from same mainCategory (different subCategory)
             if (relatedProducts.length < 4) {
                 const sameMainResponse = await fetch(
@@ -201,17 +201,17 @@ const RelatedProducts = ({ currentProductId, mainCategory, subCategory }) => {
                     { credentials: "include" }
                 );
                 const sameMainData = await sameMainResponse.json();
-                
+
                 if (sameMainData.success) {
-                    const filtered = sameMainData.data.filter(p => 
-                        p.productId !== currentProductId && 
+                    const filtered = sameMainData.data.filter(p =>
+                        p.productId !== currentProductId &&
                         p.subCategory !== subCategory &&
                         !relatedProducts.some(rp => rp.productId === p.productId)
                     );
                     relatedProducts.push(...filtered);
                 }
             }
-            
+
             // Step 3: If still less than 4, get any products (fallback)
             if (relatedProducts.length < 4) {
                 const anyProductsResponse = await fetch(
@@ -219,16 +219,16 @@ const RelatedProducts = ({ currentProductId, mainCategory, subCategory }) => {
                     { credentials: "include" }
                 );
                 const anyProductsData = await anyProductsResponse.json();
-                
+
                 if (anyProductsData.success) {
-                    const filtered = anyProductsData.data.filter(p => 
+                    const filtered = anyProductsData.data.filter(p =>
                         p.productId !== currentProductId &&
                         !relatedProducts.some(rp => rp.productId === p.productId)
                     );
                     relatedProducts.push(...filtered);
                 }
             }
-            
+
             // Limit to 4 products
             setProducts(relatedProducts.slice(0, 4));
         } catch (error) {
